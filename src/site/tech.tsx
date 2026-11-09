@@ -1,4 +1,4 @@
-import { memo, type CSSProperties } from 'react';
+import { memo, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import {
   Blocks,
   Cloud,
@@ -168,26 +168,84 @@ export function TechGlyph({ name, size = 15 }: { name: string; size?: number }) 
   return <Icon className="tech__glyph" size={size} strokeWidth={2.2} style={{ color: glyph.color }} aria-hidden="true" />;
 }
 
-/** Tools as chips with their brand icon and name (memoised: an unchanged list is not re-rendered). */
+function TechChip({ name }: { name: string }) {
+  const glyph = TECH[key(name)];
+  return (
+    <li className="tchip" style={{ '--brand': glyph?.color ?? '#8a8a99' } as CSSProperties}>
+      <TechGlyph name={name} />
+      <span>{name}</span>
+    </li>
+  );
+}
+
+/** "+N": pressing it shows the tools it stands for in a small bubble above it. */
+function MoreTools({ items }: { items: string[] }) {
+  const [open, setOpen] = useState(false);
+  const [side, setSide] = useState<'left' | 'right'>('left');
+  const root = useRef<HTMLLIElement>(null);
+  const id = useId();
+
+  // a tap anywhere else, or Escape, closes it
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('keydown', escape);
+    };
+  }, [open]);
+
+  const toggle = () => {
+    // open towards the side of the list with more room
+    const chip = root.current?.getBoundingClientRect();
+    const list = root.current?.parentElement?.getBoundingClientRect();
+    if (chip && list) setSide(chip.left + chip.width / 2 > list.left + list.width / 2 ? 'right' : 'left');
+    setOpen((o) => !o);
+  };
+
+  return (
+    <li className="tchip-more" ref={root}>
+      <button
+        type="button"
+        className="tchip tchip--more"
+        aria-expanded={open}
+        aria-controls={id}
+        aria-label={`${items.length} more: ${items.join(', ')}`}
+        onClick={toggle}
+      >
+        +{items.length}
+      </button>
+      {open && (
+        <ul className={cx('tchips', 'tchip-pop', `tchip-pop--${side}`)} id={id}>
+          {items.map((item) => (
+            <TechChip key={item} name={item} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
+/**
+ * Tools as chips with their brand icon and name (memoised: an unchanged list
+ * is not re-rendered). With `max`, the rest hide behind a "+N" chip.
+ */
 export const TechChips = memo(function TechChips({ items, max, className }: { items: string[]; max?: number; className?: string }) {
   const shown = max ? items.slice(0, max) : items;
-  const rest = max ? items.length - shown.length : 0;
+  const hidden = max ? items.slice(max) : [];
   return (
     <ul className={cx('tchips', className)}>
-      {shown.map((item) => {
-        const glyph = TECH[key(item)];
-        return (
-          <li className="tchip" key={item} style={{ '--brand': glyph?.color ?? '#8a8a99' } as CSSProperties}>
-            <TechGlyph name={item} />
-            <span>{item}</span>
-          </li>
-        );
-      })}
-      {rest > 0 && (
-        <li className="tchip tchip--more" title={items.slice(max).join(', ')}>
-          +{rest}
-        </li>
-      )}
+      {shown.map((item) => (
+        <TechChip key={item} name={item} />
+      ))}
+      {hidden.length > 0 && <MoreTools items={hidden} />}
     </ul>
   );
 });

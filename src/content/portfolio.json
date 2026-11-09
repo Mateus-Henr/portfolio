@@ -6,7 +6,7 @@
     "tagline": "Software engineer from Brazil building backends, AI tools and full-stack apps.",
     "location": "Brazil",
     "summary": [
-      "I'm a software engineer from Brazil. I move easily between backend, frontend, AI and data, I go towards hard problems instead of around them, and I'm always looking for a better way to build things."
+      "I'm a software engineer who is passionate about finding solutions to challenging problems."
     ],
     "facts": [
       {
@@ -167,7 +167,7 @@
       "id": "contract-2020",
       "type": "work",
       "headline": "First job: remote, and in English",
-      "role": "Full-stack Developer (contract)",
+      "role": "Full-stack Developer",
       "org": "Contract for a Boston team",
       "place": "Remote · Boston, USA",
       "start": "2020-09",
@@ -221,9 +221,9 @@
       "place": "Florestal, Brazil",
       "start": "2021-10",
       "end": "2022-12",
-      "story": "Computer scientists and biologists working together, using tiny boards to control the light on plant leaves.",
+      "story": "Computer scientists and biologists working together on an app that tells how healthy a plant is: a small board shines light on a leaf and analyses the fluorescence it gives back.",
       "points": [
-        "Built an app on CC1312R LaunchPad microcontrollers to precisely control leaf fluorescence, with strict performance and reliability needs",
+        "Built the app on CC1312R LaunchPad microcontrollers: it emits light on a leaf and measures its fluorescence, with strict performance and reliability needs",
         "Moved the C code to a new microcontroller, keeping it fast and compatible",
         "Wrote and debugged the firmware in Code Composer Studio"
       ],
@@ -266,7 +266,7 @@
       "id": "contract-2023",
       "type": "work",
       "headline": "Built a social network for exchange students",
-      "role": "Full-stack Developer (contract)",
+      "role": "Full-stack Developer",
       "org": "Contract for a Boston team",
       "place": "Remote · Boston, USA",
       "start": "2023-02",
@@ -365,7 +365,7 @@
       "id": "freelance-2024",
       "type": "work",
       "headline": "Designed a backend from scratch",
-      "role": "Backend Developer (freelance)",
+      "role": "Backend Developer",
       "org": "Freelance",
       "place": "Remote · Los Angeles, USA",
       "start": "2024-09",
@@ -425,13 +425,13 @@
     {
       "id": "freelance-2025",
       "type": "work",
-      "headline": "Backend for an iOS bookmarking app",
-      "role": "Backend Developer (freelance)",
+      "headline": "Backend for Capush, an iOS app",
+      "role": "Backend Developer",
       "org": "Freelance",
       "place": "Remote · Los Angeles, USA",
       "start": "2025-05",
       "end": "2026-08",
-      "story": "An iOS app, now in production, that saves links from any platform into collections, with a nice preview of each one.",
+      "story": "Capush: an iOS app, available on the App Store, that saves links from any platform into collections, with a nice preview of each one.",
       "points": [
         "Designed and delivered the whole backend from scratch: sign-in, permissions and scalable file storage",
         "A secure REST API in TypeScript with role-based access control (RBAC) and auditable permission changes",
@@ -606,15 +606,15 @@
     },
     {
       "id": "bookmarks",
-      "title": "Bookmarks app backend",
+      "title": "Capush · iOS app backend",
       "categories": [
         "backend",
         "mobile"
       ],
       "context": "Freelance",
       "year": "2025 – 2026",
-      "summary": "Backend for an iOS app that saves links into collections, with rich previews.",
-      "highlight": "Live in production",
+      "summary": "Backend for Capush, an iOS app on the App Store that saves links into collections, with rich previews.",
+      "highlight": "Live on the App Store",
       "stack": [
         "Node.js",
         "TypeScript",
@@ -635,6 +635,7 @@
       "summary": "A real-time chat web app with a Clojure and Spring Boot API and a React front end.",
       "stack": [
         "Clojure",
+        "Java",
         "Spring Boot",
         "React",
         "PostgreSQL"
@@ -707,13 +708,13 @@
     },
     {
       "id": "leaf-iot",
-      "title": "Leaf fluorescence controller",
+      "title": "Plant health monitor",
       "categories": [
         "mobile"
       ],
       "context": "UFV · Texas Instruments",
       "year": "2021 – 2022",
-      "summary": "Microcontroller app that precisely controls the light on plant leaves for biology research.",
+      "summary": "An app that tells how healthy a plant is: it shines light on a leaf and analyses the fluorescence the leaf gives back.",
       "stack": [
         "C",
         "TI LaunchPad",
@@ -867,7 +868,8 @@
       "kind": "course",
       "tech": "Java",
       "title": "Java Backend Bootcamp",
-      "issuer": "Santander · DIO"
+      "issuer": "Santander · DIO",
+      "file": "https://www.dio.me/certificate/IBV8CDHI/share"
     },
     {
       "id": "english-c2",

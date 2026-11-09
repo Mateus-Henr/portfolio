@@ -1,5 +1,5 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { ArrowDown, ChevronDown, ChevronRight, ChevronsDown, ChevronsDownUp, ChevronsUpDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
+import { ArrowDown, ChevronDown, ChevronRight, ChevronsDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
 import type { CareerStep, CareerType } from '../../content';
 import { usePortfolio } from '../content';
 import { PHONE_WIDTH, cx, prefersReducedMotion } from '../../lib/env';
@@ -352,16 +352,6 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     pending.current = following.id;
   };
 
-  const allOpen = open.size === steps.length;
-  const toggleAll = () => {
-    if (allOpen) setOpen(new Set());
-    else {
-      setOpen(new Set(steps.map((s) => s.id)));
-      setReached(steps.length - 1);
-      setExpanded(true);
-    }
-  };
-
   const counts = TYPES.map((t) => ({ t, n: steps.filter((s) => s.type === t).length }));
   const first = shown[0];
   const last = shown[shown.length - 1];
@@ -371,18 +361,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   return (
     <section id="career" className={cx('sec2', 'cp', `cp--${layout}`, `cp--line-${line}`, follow && 'cp--follow', phone && 'cp--minimal')}>
       <div className="wrap">
-        <SectionHead
-          id="career"
-          config={config}
-          action={
-            phone ? undefined : (
-              <button type="button" className="ghost-btn" onClick={toggleAll}>
-                {allOpen ? <ChevronsDownUp size={16} aria-hidden="true" /> : <ChevronsUpDown size={16} aria-hidden="true" />}
-                {allOpen ? 'Close all' : 'Open all'}
-              </button>
-            )
-          }
-        />
+        <SectionHead id="career" config={config} />
 
         <div className="cp__legend" role="group" aria-label={hide ? 'Show only one kind of step' : 'Highlight one kind of step'} data-reveal>
           {hide && (

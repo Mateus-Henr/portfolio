@@ -885,11 +885,16 @@ const rbacApp: Scene = {
   },
 };
 
-// ---------- 12. leaf controller: the board drives the lamp, the leaf glows ----------
-// board at the front left, the plant in the middle, a lamp on an arm right above it
+// ---------- 12. plant health: the lamp lights a leaf, the leaf glows back, the app reads it ----------
+// board at the front left, the plant in the middle, a lamp on an arm right above it,
+// and the app on a phone at the right
 const LF_STEM = m(3.2, 3.0, 0.55);
 const LF_LAMP = m(3.2, 3.0, 3.15);
 const LF_WIRE: P2[] = [m(2.3, 4.6, 0.01), m(4.4, 4.6, 0.01), m(4.4, 1.4, 0.01), m(4.4, 1.4, 3.4), m(3.2, 3.0, 3.4)];
+const LF_LEAF: P2 = [LF_STEM[0], LF_STEM[1] - 14];
+const LF_GAUGE: P2 = [303, 54];
+const LF_RING = 2 * Math.PI * 11; // length of the health gauge (r = 11)
+const LF_HEALTH = 0.86; // how full the gauge ends
 
 const leafIot: Scene = {
   art: (
@@ -925,29 +930,75 @@ const leafIot: Scene = {
           <circle data-a="pulse" opacity={0} r={2.3} fill="#7cf2d0" />
         </At>
       ))}
+      {/* the leaf's fluorescence: rings of red light it gives back */}
+      {[0, 1].map((i) => (
+        <circle key={i} data-a="ring" opacity={0} cx={LF_LEAF[0]} cy={LF_LEAF[1]} r={13} fill="none" stroke="#ff4d6d" strokeWidth={1.6} />
+      ))}
+      {/* the reading, on its way to the app */}
+      {[0, 1, 2].map((i) => (
+        <At key={i} p={LF_LEAF}>
+          <circle data-a="read" opacity={0} r={2.2} fill="#ff4d6d" />
+        </At>
+      ))}
+      {/* the app: how healthy the plant is */}
       <g>
         <rect x={278} y={14} width={50} height={92} rx={10} fill="#2b2d42" />
         <rect x={282} y={22} width={42} height={76} rx={6} fill="#f6f4ff" />
         <rect x={287} y={28} width={24} height={4} rx={2} fill="#c9c0f0" />
-        {[14, 24, 18, 30].map((h, i) => (
-          <rect key={i} data-a="cbar" x={288 + i * 8.5} y={90 - h} width={6} height={h} rx={1.5} fill={i % 2 ? '#22c3a6' : '#7c5cff'} />
-        ))}
+        <circle cx={LF_GAUGE[0]} cy={LF_GAUGE[1]} r={11} fill="none" stroke="#e4e0f7" strokeWidth={4} />
+        <circle
+          data-a="gauge"
+          cx={LF_GAUGE[0]}
+          cy={LF_GAUGE[1]}
+          r={11}
+          fill="none"
+          stroke="#22c3a6"
+          strokeWidth={4}
+          strokeLinecap="round"
+          strokeDasharray={LF_RING}
+          strokeDashoffset={LF_RING * (1 - LF_HEALTH)}
+          transform={`rotate(-90 ${LF_GAUGE[0]} ${LF_GAUGE[1]})`}
+        />
+        <path
+          d={`M${LF_GAUGE[0]} ${LF_GAUGE[1] + 5} c-5 -3 -5 -8 0 -11 c5 3 5 8 0 11 Z`}
+          fill="#3d9e59"
+        />
+        <path d={`M${LF_GAUGE[0]} ${LF_GAUGE[1] + 5} v-9`} stroke="#d6f5df" strokeWidth={0.9} />
+        <g data-a="ok">
+          <text x={LF_GAUGE[0]} y={81} textAnchor="middle" className="pjsc-t pjsc-t--s" fill="#169c85">
+            Healthy
+          </text>
+          <rect x={290} y={86} width={26} height={4} rx={2} fill="#d3f5ec" />
+        </g>
       </g>
     </>
   ),
   play: (tl, q) => {
-    const cbars = q('[data-a="cbar"]');
     const beam = q('[data-a="beam"]');
     const glow = q('[data-a="glow"]');
-    tl.to(cbars, { scaleY: 0.1, duration: 0.2, transformOrigin: '50% 100%' }, 0);
+    const gauge = q('[data-a="gauge"]');
+    const ok = q('[data-a="ok"]');
+    // the app starts empty and the lamp off
     tl.to(beam, { opacity: 0, duration: 0.2 }, 0);
+    tl.to(gauge, { attr: { 'stroke-dashoffset': LF_RING }, duration: 0.2 }, 0);
+    tl.to(ok, { opacity: 0, duration: 0.2 }, 0);
+    // the board powers the lamp
     ['#ff4d6d', '#22e696', '#4aa8ff', '#22e696'].forEach((c, i) => tl.to(q('[data-a="led"]'), { fill: c, duration: 0.05 }, 0.2 + i * 0.25));
     q('[data-a="pulse"]').forEach((p, i) => route(tl, p, LF_WIRE, 0.3 + i * 0.3, 1.0));
-    tl.to(beam, { opacity: 1, duration: 0.25 }, 1.4);
-    tl.to(glow, { autoAlpha: 1, duration: 0.35 }, 1.6);
-    tl.to(cbars, { scaleY: 1, duration: 0.4, stagger: 0.1, ease: 'back.out(2)', transformOrigin: '50% 100%' }, 1.9);
-    tl.to(glow, { autoAlpha: 0, duration: 0.4 }, 2.8);
-    end(tl, 3.3);
+    // the lamp shines on the leaf, and the leaf glows back
+    tl.to(beam, { opacity: 1, duration: 0.25 }, 1.3);
+    tl.to(glow, { autoAlpha: 1, duration: 0.3 }, 1.5);
+    q('[data-a="ring"]').forEach((ring, i) => {
+      const at = 1.55 + i * 0.3;
+      tl.set(ring, { attr: { r: 13 }, opacity: 0.9 }, at);
+      tl.to(ring, { attr: { r: 30 }, opacity: 0, duration: 0.7, ease: 'power1.out' }, at);
+    });
+    // the reading travels to the app, which fills the gauge
+    q('[data-a="read"]').forEach((dot, i) => fly(tl, dot, LF_LEAF, LF_GAUGE, 1.9 + i * 0.14, 0.6, 22));
+    tl.to(gauge, { attr: { 'stroke-dashoffset': LF_RING * (1 - LF_HEALTH) }, duration: 0.6, ease: 'power2.out' }, 2.55);
+    tl.to(ok, { opacity: 1, duration: 0.3 }, 3.0);
+    tl.to(glow, { autoAlpha: 0, duration: 0.4 }, 3.0);
+    end(tl, 3.6);
   },
 };
 
