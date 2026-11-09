@@ -7,10 +7,8 @@ const en = {
     title: 'Matt · Software Engineer',
   },
   lang: {
-    /** Shown on the switch: the language it changes to. */
-    other: 'PT',
-    switch: 'Ver em português',
-    otherHtmlLang: 'pt-BR',
+    /** Name of the group of flags that switches the language. */
+    label: 'Language',
   },
   nav: {
     sections: 'Sections',
@@ -137,9 +135,7 @@ const pt: Strings = {
     title: 'Matt · Engenheiro de Software',
   },
   lang: {
-    other: 'EN',
-    switch: 'View in English',
-    otherHtmlLang: 'en',
+    label: 'Idioma',
   },
   nav: {
     sections: 'Seções',

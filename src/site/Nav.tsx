@@ -1,8 +1,9 @@
 import { useLayoutEffect, useRef, type MouseEvent } from 'react';
-import { Languages, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { usePortfolio } from './content';
 import { cx } from '../lib/env';
-import { useLang, useT } from '../i18n';
+import { useLang, useT, type Lang } from '../i18n';
+import { Flag } from './flags';
 import { useActiveSection, useScrolled } from '../lib/hooks';
 import { SECTION_ICON, SECTION_ICON_ALT, Sticker, sectionTone } from './icons';
 import { Logo, LogoMark } from './Logo';
@@ -20,22 +21,33 @@ const toTop = (event: MouseEvent<HTMLAnchorElement>) => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-/** Switches the whole page between English and Portuguese; it shows the language it changes to. */
+// each language is named in itself, as language menus usually do
+const LANGUAGES: { lang: Lang; flag: 'us' | 'br'; name: string; htmlLang: string }[] = [
+  { lang: 'en', flag: 'us', name: 'English', htmlLang: 'en' },
+  { lang: 'pt', flag: 'br', name: 'Português', htmlLang: 'pt-BR' },
+];
+
+/** Two round flags: the page's language is in full colour; the other one switches the whole page. */
 function LangSwitch() {
   const { lang, setLang } = useLang();
   const t = useT();
   return (
-    <button
-      type="button"
-      className="navx__lang"
-      onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}
-      aria-label={t.lang.switch}
-      title={t.lang.switch}
-      lang={t.lang.otherHtmlLang}
-    >
-      <Languages className="navx__glyph" size={16} strokeWidth={2.1} aria-hidden="true" />
-      <span>{t.lang.other}</span>
-    </button>
+    <div className="navx__lang" role="group" aria-label={t.lang.label}>
+      {LANGUAGES.map((l) => (
+        <button
+          key={l.lang}
+          type="button"
+          className="navx__flag"
+          aria-pressed={lang === l.lang}
+          aria-label={l.name}
+          title={l.name}
+          lang={l.htmlLang}
+          onClick={() => setLang(l.lang)}
+        >
+          <Flag country={l.flag} />
+        </button>
+      ))}
+    </div>
   );
 }
 
