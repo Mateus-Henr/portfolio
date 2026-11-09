@@ -177,11 +177,11 @@ function starPath(cx: number, cy: number, r: number) {
 /**
  * The career path as a flowchart people can follow: steps are linked by a
  * winding path, every step opens like a dropdown (only the first starts
- * open), "Next step" walks along the path and lights it up as you go.
+ * open), "Next step" walks along the path and lights it up as you go. The
+ * path can stop after its first few steps, with "See more".
  *
  * Phones get a minimal timeline instead: one light row per step (its kind,
- * a dot on a thin line, the role, where and when), all closed until pressed,
- * and the path can stop after its first few steps, with "See more".
+ * a dot on a thin line, the role, where and when), all closed until pressed.
  */
 export function CareerPath({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
@@ -224,9 +224,9 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   const layout: CareerLayout = width < 760 ? 'rail' : wanted;
   // with the "hide" filter, only the chosen kind of step stays on the path
   const matching = hide && focus ? steps.filter((s) => s.type === focus) : steps;
-  // on phones only the first steps show until "See more" (it never hides a single step)
-  const limit = config.career.phoneSteps;
-  const cut = phone && limit !== undefined && !expanded && matching.length > limit + 1;
+  // only the first steps show until "See more" (it never hides a single step)
+  const limit = config.career.steps;
+  const cut = limit !== undefined && !expanded && matching.length > limit + 1;
   const shown = cut ? matching.slice(0, limit) : matching;
 
   // "scroll" mode: the light travels along the path with the page, and the step
@@ -562,7 +562,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
         {(cut || !phone) && (
         <div className={cx('cp__cap', 'cp__cap--finish', cut && 'cp__cap--more')} style={{ '--x': `${place(layout, last, steps.length - 1).x * 100}%` } as CSSProperties} data-reveal>
         {cut ? (
-          // a shortened path (phones) ends in "See more", where the rest of it continues
+          // a shortened path ends in "See more", where the rest of it continues
           <button type="button" className="cp__end cp__more" onClick={showAll}>
             <span className="cp__flag" aria-hidden="true">
               <ChevronsDown size={16} />

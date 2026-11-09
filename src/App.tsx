@@ -25,7 +25,7 @@ const config: SiteConfig = {
   heroFlip: true,
   eyebrow: 'Software Engineer · Brazil',
   about: 'files',
-  career: { layout: 'lanes', line: 'curve', order: 'newest', follow: 'scroll', filter: 'hide', phoneSteps: 5 },
+  career: { layout: 'lanes', line: 'curve', order: 'newest', follow: 'scroll', filter: 'hide', steps: 5 },
   projects: { look: 'uniform', columns: 3, rows: 2, scenes: true },
   techIcons: true,
   certificates: 'grid',

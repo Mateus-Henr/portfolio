@@ -81,7 +81,7 @@
   pointer-events: none;
 }
 
-/* "See more" at the end of a shortened path (phones): a marker you can press */
+/* "See more" at the end of a shortened path: a marker you can press */
 .cp__more {
   text-align: left;
   transition: box-shadow 0.2s ease;
