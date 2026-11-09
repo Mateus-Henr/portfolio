@@ -417,9 +417,15 @@
     --sec-title-size: 26px;
   }
 
-  /* the navigation sits at the bottom, so the top needs little room */
-  html[data-nav-mobile='bottom'] .hero2 {
-    --nav-space: 26px;
+  /* the first screen fills the phone's screen, its content centred in the room
+     above the navigation (about 67px at the bottom) */
+  .hero2--split {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 20px;
+    padding-bottom: calc(87px + env(safe-area-inset-bottom, 0px));
   }
 
   .hero2__eyebrow {
@@ -575,87 +581,14 @@
     font-size: 11px;
   }
 
-  /* career path */
+  /* career path: phones get the minimal timeline (.cp--minimal in career.css) */
 
-  /* a step opens at once and the page below slides instead (CareerPath.tsx):
-     animating the height stutters on phones */
-  .cp__panel {
-    transition: none;
-  }
-
-  .cp__head {
-    gap: 12px;
-    padding: 11px 14px 11px 20px;
-  }
-
-  /* 20px padding + half of 42px: the icon stays centred on the rail line */
-  .cp__head .sticker--md {
-    width: 42px;
-    height: 42px;
-  }
-
-  .cp__head .sticker--md svg {
-    width: 19px;
-    height: 19px;
-  }
-
-  .cp__when {
-    font-size: 11.5px;
-  }
-
-  .cp__headline {
-    font-size: 15px;
-  }
-
-  .cp__role {
-    font-size: 12.5px;
-  }
-
-  .cp__body,
-  .cp__step--milestone .cp__body {
-    gap: 10px;
-    padding: 0 14px 16px;
-  }
-
-  .cp__place {
-    font-size: 12px;
-  }
-
-  .cp__story {
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-
-  .cp__points li {
-    font-size: 13.5px;
-  }
-
-  .cp__end {
-    gap: 10px;
-    padding: 6px 14px 6px 6px;
-    font-size: 12.5px;
-  }
-
-  .cp__flag {
-    width: 28px;
-    height: 28px;
-  }
-
-  /* the start and finish markers stay inside the page */
-  .cp--rail .cp__cap .cp__end {
-    max-width: calc(100% - 17px);
-  }
-
-  .cp__cap--start {
-    padding-bottom: 20px;
-  }
-
-  .cp__cap--finish {
-    padding-top: 20px;
-  }
-
-  .cp__cap::after {
-    height: 20px;
+  /* no blur behind the floating navigation on phones: blurring the page under
+     it again on every scroll frame is costly */
+  .navx--pill.navx--mbottom {
+    background: rgba(255, 255, 255, 0.96);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* projects: one column, so cards no longer need to match heights */

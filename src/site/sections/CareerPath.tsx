@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { ArrowDown, ChevronDown, ChevronsDown, ChevronsDownUp, ChevronsUpDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { ArrowDown, ChevronDown, ChevronRight, ChevronsDown, ChevronsDownUp, ChevronsUpDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
 import type { CareerStep, CareerType } from '../../content';
 import { usePortfolio } from '../content';
 import { PHONE_WIDTH, cx, prefersReducedMotion } from '../../lib/env';
@@ -39,7 +39,8 @@ function linkPath(line: CareerLine, x1: number, x2: number, h: number) {
   return `M${x1} 0 C${x1} ${h * 0.55} ${x2} ${h * 0.45} ${x2} ${h}`;
 }
 
-function Connector({
+// memoised: when a step opens, the links that did not change are skipped
+const Connector = memo(function Connector({
   x1,
   x2,
   width,
@@ -78,23 +79,36 @@ function Connector({
       {(next || follow) && <span className="cp__walker" style={{ offsetPath: `path('${d}')` } as CSSProperties} />}
     </div>
   );
-}
+});
 
-const SLIDE = '340ms cubic-bezier(0.2, 0.8, 0.2, 1)';
+const SLIDE: KeyframeAnimationOptions = { id: 'cp-slide', duration: 340, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' };
 let slideRun = 0;
-let clipped: HTMLElement | null = null;
-const touched = new Set<HTMLElement>();
+/** True while a slide runs: the light that follows the scroll waits for it to end. */
+let slideActive = false;
+let curtain: HTMLElement | null = null;
+let tail: HTMLElement | null = null;
+
+function dropCurtain() {
+  curtain?.style.removeProperty('--curtain');
+  curtain?.removeAttribute('data-curtain');
+  curtain = null;
+  tail?.style.removeProperty('--tail');
+  tail?.removeAttribute('data-tail');
+  tail = null;
+}
 
 /**
  * Phones: a step opens or closes at once and everything under it slides into
- * place. Only transforms move, which the phone's graphics chip handles without
- * laying out and repainting the page every frame (a height animation stutters
- * there). An opening card is uncovered by a clip that follows the slide, so it
- * still looks like the card is growing.
+ * place. Only transforms move, which the phone's graphics chip handles by
+ * itself: nothing is laid out or repainted while it slides (a height
+ * animation stutters there). While a card opens, the first piece below it
+ * carries a white curtain that hides the card's new lines until the slide
+ * uncovers them, so the card still looks like it is growing.
  */
-function slideBelow(step: HTMLElement, card: HTMLElement, dy: number, done: () => void) {
+function slideBelow(step: HTMLElement, dy: number, done: () => void) {
   if (!dy) return;
   const run = ++slideRun;
+  slideActive = true;
   const section = step.closest('section');
   const below: HTMLElement[] = [];
   for (let el = step.nextElementSibling; el; el = el.nextElementSibling) below.push(el as HTMLElement);
@@ -103,12 +117,6 @@ function slideBelow(step: HTMLElement, card: HTMLElement, dy: number, done: () =
   for (let el = section?.nextElementSibling; el; el = el.nextElementSibling) below.push(el as HTMLElement);
   const footer = document.querySelector<HTMLElement>('.foot2');
   if (footer) below.push(footer);
-
-  if (clipped && clipped !== card) {
-    clipped.style.clipPath = '';
-    clipped.style.transition = '';
-  }
-  clipped = card;
 
   // Read everything first. Each piece starts where it is on screen now (a
   // slide still running included); only what crosses the screen slides,
@@ -120,39 +128,38 @@ function slideBelow(step: HTMLElement, card: HTMLElement, dy: number, done: () =
     const start = box.top - dy;
     const end = box.top - now;
     const seen = Math.min(start, end) < screen && Math.max(start, end) + box.height > 0;
-    return { el, from: now - dy, seen, now };
+    return { el, from: now - dy, seen };
   });
-  const movers = plan.filter((p) => p.seen).map((p) => p.el);
-  plan.forEach((p) => {
-    if (!p.seen && !p.now) return;
-    touched.add(p.el);
-    p.el.style.transition = 'none';
-    p.el.style.transform = p.seen ? `translateY(${p.from}px)` : '';
-  });
-  touched.add(card);
-  card.style.transition = 'none';
-  // the sides and top stay open so the card's shadow is never cut
-  if (dy > 0) card.style.clipPath = `inset(-40px -40px ${dy}px -40px)`;
-  void card.offsetWidth; // apply the start positions before sliding
+  // a new slide replaces the one still running (the pieces off screen jump unseen)
+  plan.forEach(({ el }) => el.getAnimations().forEach((a) => a.id === SLIDE.id && a.cancel()));
+  dropCurtain();
 
-  movers.forEach((el) => {
-    el.style.transition = `transform ${SLIDE}`;
-    el.style.transform = '';
-  });
-  if (dy > 0) {
-    card.style.transition = `clip-path ${SLIDE}`;
-    card.style.clipPath = 'inset(-40px -40px 0px -40px)';
+  // Web animations need no style flush in between and leave nothing behind
+  const movers = plan.filter((p) => p.seen);
+  if (dy > 0 && movers[0]) {
+    // tall enough to cover the card's new lines and the shadow under them
+    curtain = movers[0].el;
+    curtain.style.setProperty('--curtain', `${dy + 60}px`);
+    curtain.setAttribute('data-curtain', '');
   }
-  // once the last slide has finished, hand everything back to the stylesheet
-  const running = [card, ...movers].flatMap((el) => el.getAnimations()).map((a) => a.finished.catch(() => {}));
-  Promise.all(running).then(() => {
+  const slides = movers.map(({ el, from }) => el.animate([{ transform: `translateY(${from}px)` }, { transform: 'none' }], SLIDE));
+  // Closing on the minimal timeline: the next step carries a piece of the line
+  // above it that shrinks with the gap, so the line never breaks while it closes
+  const next = movers[0]?.el;
+  if (dy < 0 && next?.classList.contains('cp__step') && next.closest('.cp--minimal')) {
+    tail = next;
+    tail.style.setProperty('--tail', `${-dy}px`);
+    tail.setAttribute('data-tail', '');
+    try {
+      tail.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { ...SLIDE, pseudoElement: '::after' });
+    } catch {
+      // browsers that cannot animate a pseudo-element just show the gap
+    }
+  }
+  Promise.all(slides.map((a) => a.finished.catch(() => {}))).then(() => {
     if (run !== slideRun) return;
-    touched.forEach((el) => {
-      el.style.transition = '';
-      el.style.clipPath = '';
-    });
-    touched.clear();
-    clipped = null;
+    dropCurtain();
+    slideActive = false;
     done();
   });
 }
@@ -171,22 +178,26 @@ function starPath(cx: number, cy: number, r: number) {
  * The career path as a flowchart people can follow: steps are linked by a
  * winding path, every step opens like a dropdown (only the first starts
  * open), "Next step" walks along the path and lights it up as you go.
- * On phones the path can stop after its first few steps, with "See more".
+ *
+ * Phones get a minimal timeline instead: one light row per step (its kind,
+ * a dot on a thin line, the role, where and when), all closed until pressed,
+ * and the path can stop after its first few steps, with "See more".
  */
 export function CareerPath({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
   const { layout: wanted, line, order } = config.career;
-  const follow = config.career.follow === 'scroll';
+  const phone = useMediaQuery(PHONE_WIDTH);
+  // the light that follows the scroll is left out on phones: it redraws on every scroll frame
+  const follow = config.career.follow === 'scroll' && !phone;
   const hide = config.career.filter === 'hide';
   const steps = useMemo(() => (order === 'newest' ? [...portfolio.career].reverse() : portfolio.career), [order, portfolio]);
   const viewer = usePdfViewer();
 
-  const [open, setOpen] = useState<Set<string>>(() => new Set([steps[0].id]));
+  const [open, setOpen] = useState<Set<string>>(() => new Set(phone ? [] : [steps[0].id]));
   const [reached, setReached] = useState(0);
   const [focus, setFocus] = useState<CareerType | null>(null);
   const [width, setWidth] = useState(1000);
   const [expanded, setExpanded] = useState(false);
-  const phone = useMediaQuery(PHONE_WIDTH);
   const list = useRef<HTMLOListElement>(null);
   const pending = useRef<string | null>(null);
   const firstNew = useRef<string | null>(null);
@@ -227,6 +238,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     let frame = 0;
     const update = () => {
       frame = 0;
+      if (slideActive) return; // refreshed once the slide ends
       const mid = window.innerHeight * 0.45;
       const links = Array.from(el.querySelectorAll<HTMLElement>('.cp__link'));
       let ball = -1;
@@ -267,6 +279,8 @@ export function CareerPath({ config }: { config: SiteConfig }) {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       ro.disconnect();
+      refreshFollow.current = () => {};
+      el.querySelectorAll('[data-current]').forEach((n) => n.removeAttribute('data-current'));
     };
   }, [follow, focus, layout, width]);
 
@@ -288,7 +302,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     sliding.current = null;
     const step = document.getElementById(`cp-${s.id}`);
     const card = step?.querySelector<HTMLElement>('.cp__node');
-    if (step && card) slideBelow(step, card, card.offsetHeight - s.height, () => refreshFollow.current());
+    if (step && card) slideBelow(step, card.offsetHeight - s.height, () => refreshFollow.current());
   }, [open]);
 
   // after "See more" the button is gone: move focus to the first step that appeared
@@ -355,16 +369,18 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   const endLabel = order === 'oldest' ? 'Today' : 'Where it began';
 
   return (
-    <section id="career" className={cx('sec2', 'cp', `cp--${layout}`, `cp--line-${line}`, follow && 'cp--follow')}>
+    <section id="career" className={cx('sec2', 'cp', `cp--${layout}`, `cp--line-${line}`, follow && 'cp--follow', phone && 'cp--minimal')}>
       <div className="wrap">
         <SectionHead
           id="career"
           config={config}
           action={
-            <button type="button" className="ghost-btn" onClick={toggleAll}>
-              {allOpen ? <ChevronsDownUp size={16} aria-hidden="true" /> : <ChevronsUpDown size={16} aria-hidden="true" />}
-              {allOpen ? 'Close all' : 'Open all'}
-            </button>
+            phone ? undefined : (
+              <button type="button" className="ghost-btn" onClick={toggleAll}>
+                {allOpen ? <ChevronsDownUp size={16} aria-hidden="true" /> : <ChevronsUpDown size={16} aria-hidden="true" />}
+                {allOpen ? 'Close all' : 'Open all'}
+              </button>
+            )
           }
         />
 
@@ -401,6 +417,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
           })}
         </div>
 
+        {!phone && (
         <div className="cp__cap cp__cap--start" style={{ '--x': `${place(layout, first, 0).x * 100}%` } as CSSProperties} data-reveal>
         <div className="cp__end cp__end--start">
           <span className="cp__flag" aria-hidden="true">
@@ -411,6 +428,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
           </span>
         </div>
         </div>
+        )}
 
         <ol className="cp__list" ref={list} data-focus={focus ?? undefined}>
           {shown.map((step, i) => {
@@ -431,7 +449,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                 className={cx('cp__step', `cp__step--${step.type}`, !hide && focus && focus !== step.type && 'is-dim')}
                 style={{ '--x': `${pos.x * 100}%`, '--w': `${pos.w * 100}%`, '--tone': careerTone(step.type) } as CSSProperties}
               >
-                {prev && (
+                {prev && !phone && (
                   <Connector
                     x1={x1}
                     x2={x2}
@@ -452,22 +470,46 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                     aria-controls={`cp-panel-${step.id}`}
                     onClick={() => toggle(step.id, index)}
                   >
-                    <Sticker Icon={Icon} tone={careerTone(step.type)} size={step.type === 'milestone' ? 'sm' : 'md'} />
-                    <span className="cp__titles">
-                      <span className="cp__when">
-                        {stepDates(step)} <span className="cp__type">· {label}</span>
-                      </span>
-                      <span className="cp__headline">{step.headline}</span>
-                      <span className="cp__role">
-                        {step.role} · {step.org}
-                      </span>
-                    </span>
-                    {!step.end && <span className="cp__now">Now</span>}
-                    <ChevronDown className="cp__chev" size={20} aria-hidden="true" />
+                    {phone ? (
+                      // minimal row: kind, a dot on the line, then role, where and when
+                      <>
+                        <span className="cp__icon" aria-hidden="true">
+                          <Icon size={17} strokeWidth={2.2} />
+                        </span>
+                        <span className="cp__dot" aria-hidden="true" />
+                        <span className="cp__titles">
+                          <span className="cp__title">
+                            <span className="visually-hidden">{label}: </span>
+                            {step.role}
+                          </span>
+                          <span className="cp__org">{step.org}</span>
+                          <span className="cp__when">{stepDates(step)}</span>
+                        </span>
+                        <span className="cp__chev" aria-hidden="true">
+                          <ChevronRight size={18} />
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Sticker Icon={Icon} tone={careerTone(step.type)} size={step.type === 'milestone' ? 'sm' : 'md'} />
+                        <span className="cp__titles">
+                          <span className="cp__when">
+                            {stepDates(step)} <span className="cp__type">· {label}</span>
+                          </span>
+                          <span className="cp__headline">{step.headline}</span>
+                          <span className="cp__role">
+                            {step.role} · {step.org}
+                          </span>
+                        </span>
+                        {!step.end && <span className="cp__now">Now</span>}
+                        <ChevronDown className="cp__chev" size={20} aria-hidden="true" />
+                      </>
+                    )}
                   </button>
                   <div className="cp__panel" id={`cp-panel-${step.id}`} role="region" aria-label={step.headline} inert={!isOpen}>
                     <div className="cp__panel-inner">
                       <div className="cp__body">
+                        {phone && <p className="cp__lead">{step.headline}</p>}
                         <p className="cp__place">
                           <MapPin size={14} aria-hidden="true" /> {step.place}
                         </p>
@@ -502,7 +544,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                               <ExternalLink size={15} aria-hidden="true" /> {step.link.label}
                             </a>
                           )}
-                          {following && !follow && !(hide && focus) && (
+                          {following && !follow && !phone && !(hide && focus) && (
                             <button type="button" className="cp__next" onClick={() => walk(index)}>
                               Next step: {following.headline} <ArrowDown size={15} aria-hidden="true" />
                             </button>
@@ -517,7 +559,8 @@ export function CareerPath({ config }: { config: SiteConfig }) {
           })}
         </ol>
 
-        <div className="cp__cap cp__cap--finish" style={{ '--x': `${place(layout, last, steps.length - 1).x * 100}%` } as CSSProperties} data-reveal>
+        {(cut || !phone) && (
+        <div className={cx('cp__cap', 'cp__cap--finish', cut && 'cp__cap--more')} style={{ '--x': `${place(layout, last, steps.length - 1).x * 100}%` } as CSSProperties} data-reveal>
         {cut ? (
           // a shortened path (phones) ends in "See more", where the rest of it continues
           <button type="button" className="cp__end cp__more" onClick={showAll}>
@@ -525,10 +568,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
               <ChevronsDown size={16} />
             </span>
             <span>
-              <strong>See more</strong> ·{' '}
-              {order === 'newest'
-                ? `${matching.length - shown.length} earlier steps, back to ${matching[matching.length - 1].start.slice(0, 4)}`
-                : `${matching.length - shown.length} more steps, up to today`}
+              <strong>See more</strong> · {matching.length - shown.length} {order === 'newest' ? 'earlier' : 'later'} steps
             </span>
           </button>
         ) : (
@@ -542,6 +582,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
         </div>
         )}
         </div>
+        )}
       </div>
     </section>
   );

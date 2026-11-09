@@ -61,6 +61,26 @@
   color: var(--text);
 }
 
+/* phones: while a card opens, the first piece sliding under it carries this white
+   curtain, which hides the card's new lines until the slide uncovers them
+   (slideBelow in CareerPath.tsx) */
+[data-curtain] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-curtain]::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: -48px;
+  right: -48px;
+  height: var(--curtain);
+  background: var(--bg);
+  pointer-events: none;
+}
+
 /* "See more" at the end of a shortened path (phones): a marker you can press */
 .cp__more {
   text-align: left;
@@ -532,4 +552,213 @@
   .cp--line-metro .cp__node::before {
     left: 41px;
   }
+}
+
+/* ---------- phones: a minimal timeline (.cp--minimal, set by CareerPath.tsx) ----------
+   One light row per step: its kind, a dot on a thin line, the role, where and
+   when. The full story opens under the row when it is pressed. Rows, not
+   cards: nothing heavy to redraw while the page scrolls. */
+.cp.cp--minimal {
+  --row-icon: 34px;
+  --row-gap: 12px;
+  --row-pad: 12px;
+  --dot: 12px;
+  /* centre of the role's first line, where the dot sits */
+  --dot-y: calc(var(--row-pad) + 10px);
+  --line-x: calc(var(--row-icon) + var(--row-gap) + var(--dot) / 2);
+  --text-x: calc(var(--row-icon) + var(--row-gap) * 2 + var(--dot));
+  --rule: color-mix(in oklab, var(--muted) 24%, white);
+}
+
+/* a step opens at once and the page below slides instead (slideBelow) */
+.cp.cp--minimal .cp__panel {
+  transition: none;
+}
+
+.cp.cp--minimal .cp__node {
+  width: 100%;
+  margin-left: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* each step draws its piece of the line; together they make one line */
+.cp.cp--minimal .cp__node::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--line-x) - 1px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--rule);
+}
+
+.cp.cp--minimal .cp__step:first-child .cp__node::before {
+  top: var(--dot-y);
+}
+
+.cp.cp--minimal .cp__step:last-child .cp__node::before {
+  bottom: auto;
+  height: var(--dot-y);
+}
+
+.cp.cp--minimal .cp__step:only-child .cp__node::before {
+  display: none;
+}
+
+/* while a step closes, the next one carries the line up across the gap (slideBelow) */
+.cp.cp--minimal [data-tail]::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--line-x) - 1px);
+  bottom: 100%;
+  width: 2px;
+  height: var(--tail);
+  background: var(--rule);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+
+.cp.cp--minimal .cp__head {
+  display: grid;
+  grid-template-columns: var(--row-icon) var(--dot) minmax(0, 1fr) auto;
+  column-gap: var(--row-gap);
+  align-items: start;
+  padding: var(--row-pad) 0;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cp.cp--minimal .cp__head:active {
+  background: var(--surface-2);
+}
+
+.cp.cp--minimal .cp__icon {
+  display: grid;
+  place-items: center;
+  width: var(--row-icon);
+  height: var(--row-icon);
+  margin-top: 3px;
+  border-radius: 10px;
+  color: color-mix(in oklab, var(--tone) 82%, black);
+  background: color-mix(in oklab, var(--tone) 12%, white);
+}
+
+/* a ring in the colour of the step's kind; the role you have now is filled */
+.cp.cp--minimal .cp__dot {
+  position: relative;
+  z-index: 1;
+  width: var(--dot);
+  height: var(--dot);
+  margin-top: calc(10px - var(--dot) / 2);
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 2.5px var(--tone);
+}
+
+.cp.cp--minimal .cp__node.is-now .cp__dot {
+  background: var(--tone);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--tone) 22%, transparent);
+}
+
+.cp.cp--minimal .cp__titles {
+  gap: 1px;
+}
+
+.cp.cp--minimal .cp__title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.cp.cp--minimal .cp__node.is-open .cp__title {
+  color: color-mix(in oklab, var(--tone) 80%, black);
+}
+
+.cp.cp--minimal .cp__org {
+  font-size: 13.5px;
+  font-weight: 550;
+  line-height: 1.35;
+  color: color-mix(in oklab, var(--text) 72%, white);
+}
+
+.cp.cp--minimal .cp__when {
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+/* the arrow turns on a wrapping span: the graphics chip can turn a span on its
+   own, while turning the svg itself would repaint the row on every frame */
+.cp.cp--minimal .cp__chev {
+  display: grid;
+  align-self: center;
+  color: color-mix(in oklab, var(--muted) 80%, white);
+  transition: transform 0.3s cubic-bezier(0.3, 1.2, 0.4, 1);
+}
+
+.cp.cp--minimal .is-open .cp__chev {
+  transform: rotate(90deg);
+}
+
+/* the story, under the row, lined up with the text */
+.cp.cp--minimal .cp__body {
+  gap: 10px;
+  padding: 0 0 18px var(--text-x);
+}
+
+.cp.cp--minimal .cp__lead {
+  font-size: 14.5px;
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.cp.cp--minimal .cp__place {
+  font-size: 12px;
+}
+
+.cp.cp--minimal .cp__story {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cp.cp--minimal .cp__points li {
+  font-size: 13.5px;
+}
+
+/* "See more" under the last row, lined up with the text */
+.cp.cp--minimal .cp__cap--more {
+  padding: 4px 0 0 calc(var(--text-x) - 6px);
+}
+
+.cp.cp--minimal .cp__cap--more::after {
+  display: none;
+}
+
+.cp.cp--minimal .cp__cap--more .cp__more {
+  gap: 8px;
+  margin-left: 0;
+  padding: 6px 12px 6px 6px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.cp.cp--minimal .cp__more strong {
+  color: inherit;
+}
+
+.cp.cp--minimal .cp__more .cp__flag {
+  width: 24px;
+  height: 24px;
 }

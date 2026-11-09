@@ -23,7 +23,7 @@ import {
   UserRound,
   type LucideIcon,
 } from 'lucide-react';
-import type { CSSProperties } from 'react';
+import { memo, type CSSProperties } from 'react';
 import type { CareerType, CertificateKind, SocialKind } from '../content';
 import { cx } from '../lib/env';
 import type { SectionId } from './config';
@@ -72,8 +72,9 @@ export const CERT_META: Record<CertificateKind | 'all', { label: string; Icon: L
 /**
  * The round "sticker" icon from version 01: a tinted disc with a white rim,
  * a soft drop shadow and a small tilt. `tone` picks the colour variable.
+ * Memoised: when a list re-renders (a career step opens), unchanged icons are skipped.
  */
-export function Sticker({
+export const Sticker = memo(function Sticker({
   Icon,
   tone,
   size = 'md',
@@ -97,7 +98,7 @@ export function Sticker({
       <Icon strokeWidth={2.1} />
     </span>
   );
-}
+});
 
 export const sectionTone = (id: SectionId) => `var(--sec-${id})`;
 export const careerTone = (type: CareerType) => `var(--type-${type})`;

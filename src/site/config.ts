@@ -45,7 +45,8 @@ export interface SiteConfig {
     order: 'oldest' | 'newest';
     /**
      * "button": a "Next step" button walks the path.
-     * "scroll": a light follows the path as the page scrolls and the step in view is highlighted.
+     * "scroll": a light follows the path as the page scrolls and the step in view is highlighted
+     * (not on phones, where the path is a minimal timeline).
      */
     follow?: 'button' | 'scroll';
     /** What the Study / Work / Research / Milestone filters do to the other steps. */

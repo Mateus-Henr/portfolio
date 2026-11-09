@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { memo, type CSSProperties } from 'react';
 import {
   Blocks,
   Cloud,
@@ -168,8 +168,8 @@ export function TechGlyph({ name, size = 15 }: { name: string; size?: number }) 
   return <Icon className="tech__glyph" size={size} strokeWidth={2.2} style={{ color: glyph.color }} aria-hidden="true" />;
 }
 
-/** Tools as chips with their brand icon and name. */
-export function TechChips({ items, max, className }: { items: string[]; max?: number; className?: string }) {
+/** Tools as chips with their brand icon and name (memoised: an unchanged list is not re-rendered). */
+export const TechChips = memo(function TechChips({ items, max, className }: { items: string[]; max?: number; className?: string }) {
   const shown = max ? items.slice(0, max) : items;
   const rest = max ? items.length - shown.length : 0;
   return (
@@ -190,4 +190,4 @@ export function TechChips({ items, max, className }: { items: string[]; max?: nu
       )}
     </ul>
   );
-}
+});

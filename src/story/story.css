@@ -201,8 +201,9 @@
   transform: scale(1.08);
 }
 
-/* a soft ring pulses while the story plays */
-.story[data-state='playing'] .story__play {
+/* a soft ring pulses while the story plays (not off screen, where it would
+   only cost work on every frame) */
+.story[data-state='playing']:not([data-offscreen]) .story__play {
   animation: story-pulse 1.6s ease-in-out infinite;
 }
 

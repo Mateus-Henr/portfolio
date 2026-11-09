@@ -11,8 +11,9 @@ import './scene/theme.css';
   The style is white with violet and mint accents. The opening story, "The
   Architecture Machine", floats on the page with no frame; the navigation is
   a floating pill (a bottom bar on phones); the career path follows the
-  scroll; every project card has a small animation that plays on hover (on
-  phones, as the card scrolls into view).
+  scroll (on phones it is a minimal timeline instead); every project card
+  has a small animation that plays on hover (on phones, as the card scrolls
+  into view).
 */
 const config: SiteConfig = {
   theme: 'v21',
