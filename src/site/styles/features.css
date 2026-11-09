@@ -33,8 +33,8 @@
   padding-right: 6px;
 }
 
-/* ---------- the language switch: two round flags at the end of the navigation ---------- */
-.navx__lang {
+/* ---------- the language switch: two round flags ---------- */
+.lang-switch {
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -44,7 +44,7 @@
   background: var(--surface-2);
 }
 
-.navx__flag {
+.lang-switch__flag {
   display: grid;
   place-items: center;
   padding: 3px;
@@ -56,13 +56,13 @@
   transition: opacity 0.2s ease, filter 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.navx__flag:hover {
+.lang-switch__flag:hover {
   opacity: 0.9;
   filter: none;
 }
 
 /* the page's language */
-.navx__flag[aria-pressed='true'] {
+.lang-switch__flag[aria-pressed='true'] {
   opacity: 1;
   filter: none;
   background: var(--surface);
@@ -83,12 +83,47 @@
   height: 100%;
 }
 
-.navx--pill .navx__lang {
-  margin-left: -6px;
+/* in the top-right corner, level with the floating navigation (48px high at top: 16px) */
+.lang-switch--corner {
+  position: fixed;
+  top: 18px;
+  right: var(--gutter);
+  z-index: 50;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.84);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-2);
 }
 
-.sidebar .navx__lang {
+.lang-switch--corner .lang-switch__flag {
+  padding: 5px;
+}
+
+.lang-switch--corner .lang-switch__flag[aria-pressed='true'] {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+
+.lang-switch--corner .flag {
+  width: 22px;
+  height: 22px;
+}
+
+.sidebar .lang-switch {
   align-self: flex-start;
+}
+
+/* narrow tablets: the navigation shows only its icons, so the flags in the corner fit beside it */
+@media (min-width: 821px) and (max-width: 960px) {
+  .navx--pill .navx__label {
+    display: none;
+  }
+
+  .navx--pill .navx__link {
+    padding: 9px 11px;
+  }
 }
 
 /* ---------- phones: the floating pill moves to the bottom ---------- */
@@ -123,14 +158,14 @@
     background: color-mix(in oklab, var(--accent) 12%, white);
   }
 
-  /* slightly bigger flags on phones, easier to tap */
-  .navx--mbottom .navx__lang {
-    margin-left: 0;
-  }
-
-  .navx--mbottom .flag {
-    width: 22px;
-    height: 22px;
+  /* the navigation moved to the bottom: the flags stay at the top of the page and
+     scroll away with it, so they never cover the content (solid, no blur) */
+  .lang-switch--corner {
+    position: absolute;
+    top: 14px;
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   html[data-nav-mobile='bottom'] .hero2 {
@@ -486,13 +521,14 @@
   }
 
   /* the first screen fills the phone's screen, its content centred in the room
-     above the navigation (about 67px at the bottom) */
+     between the flags at the top (about 58px) and the navigation at the bottom
+     (about 67px) */
   .hero2--split {
     display: flex;
     align-items: center;
     min-height: 100vh;
     min-height: 100svh;
-    padding-top: 20px;
+    padding-top: 66px;
     padding-bottom: calc(87px + env(safe-area-inset-bottom, 0px));
   }
 

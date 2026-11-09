@@ -27,17 +27,20 @@ const LANGUAGES: { lang: Lang; flag: 'us' | 'br'; name: string; htmlLang: string
   { lang: 'pt', flag: 'br', name: 'Português', htmlLang: 'pt-BR' },
 ];
 
-/** Two round flags: the page's language is in full colour; the other one switches the whole page. */
-function LangSwitch() {
+/**
+ * Two round flags: the page's language is in full colour; the other one
+ * switches the whole page. `corner` floats it in the top-right corner.
+ */
+function LangSwitch({ corner = false }: { corner?: boolean }) {
   const { lang, setLang } = useLang();
   const t = useT();
   return (
-    <div className="navx__lang" role="group" aria-label={t.lang.label}>
+    <div className={cx('lang-switch', corner && 'lang-switch--corner')} role="group" aria-label={t.lang.label}>
       {LANGUAGES.map((l) => (
         <button
           key={l.lang}
           type="button"
-          className="navx__flag"
+          className="lang-switch__flag"
           aria-pressed={lang === l.lang}
           aria-label={l.name}
           title={l.name}
@@ -120,8 +123,8 @@ export function Nav({ config }: { config: SiteConfig }) {
             );
           })}
         </ul>
-        <LangSwitch />
       </nav>
+      <LangSwitch corner />
     </>
   );
 }
