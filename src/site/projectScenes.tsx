@@ -1015,6 +1015,144 @@ const leafIot: Scene = {
   },
 };
 
+// ---------- 12b. QR payments: pick an account, type an amount, the QR is paid, then printed ----------
+// the app window at the left, a monitor with the QR at the back, a printer in front,
+// and the customer's phone at the right
+const QR_BITS = ['111010111', '111000111', '111010111', '000101000', '101110101', '010011010', '111001101', '111010011', '111011110'];
+const QR_CELL = 0.16;
+const QR_A0 = 1.85; // where the code starts on the screen, along it
+const QR_Z0 = 2.24; // and its top edge
+const QR_CENTRE = m(QR_A0 + 0.72, 2.08, QR_Z0 - 0.72);
+const QR_PHONE: P2 = [301, 62];
+const QR_SLOT = m(4.5, 4.5, 0.35);
+const PAPER_BITS = ['11011', '10101', '01110', '10011', '11101'];
+
+const qrPayments: Scene = {
+  art: (
+    <>
+      <Base />
+      {/* the monitor showing the QR code */}
+      <Bx b={[2.0, 1.2, 0, 3.2, 2.1, 0.08]} c={GREY} />
+      <Bx b={[2.45, 1.5, 0.08, 2.75, 1.75, 0.55]} c={GREY} />
+      <Bx b={[0.6, 1.9, 0.5, 4.4, 2.08, 2.9]} c={DARK} />
+      <Face plane="y" at={2.08} a0={0.75} a1={4.25} z0={0.65} z1={2.75} fill="#fbfaff" />
+      <Face plane="y" at={2.08} a0={0.75} a1={4.25} z0={2.47} z1={2.75} fill="#7c5cff" />
+      {QR_BITS.flatMap((row, r) =>
+        [...row].map((bit, c) =>
+          bit === '1' ? (
+            <Face
+              key={`${r}-${c}`}
+              data-a="qr"
+              plane="y"
+              at={2.08}
+              a0={QR_A0 + c * QR_CELL}
+              a1={QR_A0 + (c + 1) * QR_CELL}
+              z0={QR_Z0 - (r + 1) * QR_CELL}
+              z1={QR_Z0 - r * QR_CELL}
+              fill="#23233a"
+            />
+          ) : null,
+        ),
+      )}
+      {/* the printer, with the QR coming out on a slip */}
+      <Bx b={[3.6, 3.3, 0, 5.4, 4.5, 0.75]} c={['#f7f6fc', '#dcd8ec', '#c6c1db']} />
+      <Flat x0={3.9} y0={3.5} x1={5.1} y1={3.8} z={0.76} fill="#c6c1db" />
+      <Face plane="y" at={4.5} a0={3.95} a1={5.05} z0={0.3} z1={0.4} fill="#2b2d42" />
+      <circle data-a="pled" cx={m(5.4, 4.2, 0.6)[0] - 3} cy={m(5.4, 4.2, 0.6)[1]} r={1.6} fill="#22c3a6" />
+      <g data-a="paper" data-o={pt(QR_SLOT)}>
+        <Flat x0={4.0} y0={4.5} x1={5.0} y1={5.55} z={0.35} fill="#ffffff" stroke="rgba(40,30,90,0.18)" strokeWidth={0.6} />
+        {PAPER_BITS.flatMap((row, r) =>
+          [...row].map((bit, c) =>
+            bit === '1' ? <Flat key={`${r}-${c}`} x0={4.18 + c * 0.13} y0={4.7 + r * 0.13} x1={4.29 + c * 0.13} y1={4.81 + r * 0.13} z={0.36} fill="#23233a" /> : null,
+          ),
+        )}
+      </g>
+      {/* the app: saved bank accounts, the amount and the button that makes the QR */}
+      <g>
+        <rect x={10} y={16} width={90} height={88} rx={9} fill="#fff" stroke="#e3dcff" />
+        {['#ff5f57', '#febc2e', '#28c840'].map((c, i) => (
+          <circle key={c} cx={18 + i * 6} cy={24} r={1.9} fill={c} />
+        ))}
+        <rect data-a="acct" x={15} y={32} width={80} height={17} rx={5} fill="rgba(124,92,255,0.12)" stroke="#7c5cff" strokeWidth={0.9} />
+        <rect x={19} y={37} width={10} height={8} rx={1.5} fill="#7c5cff" />
+        <path d="M18 37.5 L24 33.8 L30 37.5 Z" fill="#7c5cff" />
+        <text x={33} y={44} className="pjsc-t pjsc-t--s">
+          •••• 4821
+        </text>
+        <rect x={19} y={56} width={10} height={8} rx={1.5} fill="#c9c3e3" />
+        <path d="M18 56.5 L24 52.8 L30 56.5 Z" fill="#c9c3e3" />
+        <text x={33} y={63} className="pjsc-t pjsc-t--s pjsc-t--muted">
+          •••• 0937
+        </text>
+        <rect x={15} y={74} width={52} height={17} rx={5} fill="#f6f4ff" stroke="#e3dcff" />
+        <text data-a="amount" x={20} y={85.5} className="pjsc-t pjsc-t--s">
+          <Word id="amount" />
+        </text>
+        <g data-a="go" data-o="83 82.5">
+          <rect x={71} y={74} width={24} height={17} rx={5} fill="#7c5cff" />
+          <rect x={77.5} y={78} width={4} height={4} fill="#fff" />
+          <rect x={84.5} y={78} width={4} height={4} fill="#fff" />
+          <rect x={77.5} y={84} width={4} height={4} fill="#fff" />
+          <rect x={85} y={84.5} width={2} height={2} fill="#fff" />
+        </g>
+      </g>
+      {/* the customer's phone, which scans the code */}
+      <g>
+        <rect x={280} y={22} width={42} height={80} rx={9} fill="#2b2d42" />
+        <rect x={284} y={30} width={34} height={64} rx={5} fill="#f6f4ff" />
+        <path d="M290 46 V42 H294 M308 42 H312 V46 M312 78 V82 H308 M294 82 H290 V78" fill="none" stroke="#7c5cff" strokeWidth={1.6} strokeLinecap="round" />
+        <rect data-a="scan" opacity={0} x={290} y={45} width={22} height={2} rx={1} fill="#22c3a6" />
+      </g>
+      <At p={QR_PHONE}>
+        <g data-a="coin" opacity={0}>
+          <circle r={5} fill="#ffb02e" stroke="#e8920c" strokeWidth={1.2} />
+          <circle r={2.2} fill="none" stroke="#fff" strokeWidth={1} />
+        </g>
+      </At>
+      {/* paid */}
+      <At p={up(m(4.25, 2.08, 2.75), 9)}>
+        <g data-a="paid">
+          <rect x={-23} y={-8} width={46} height={16} rx={8} fill="#22c3a6" />
+          <path d="M-16 0 L-13 3 L-8 -3" fill="none" stroke="#fff" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+          <text x={4} y={3} textAnchor="middle" className="pjsc-t pjsc-t--s" fill="#fff">
+            <Word id="paid" />
+          </text>
+        </g>
+      </At>
+    </>
+  ),
+  play: (tl, q) => {
+    const account = q('[data-a="acct"]');
+    const amount = q('[data-a="amount"]');
+    const go = q('[data-a="go"]');
+    const cells = q('[data-a="qr"]');
+    const paper = q('[data-a="paper"]');
+    const scan = q('[data-a="scan"]');
+    const paid = q('[data-a="paid"]');
+    // the screen starts empty: no account picked, no amount, no QR, nothing printed
+    hide(tl, [account, amount, paid]);
+    tl.to(cells, { opacity: 0, duration: 0.2 }, 0);
+    tl.to(paper, { scale: 0.1, autoAlpha: 0, duration: 0.2, svgOrigin: origin(paper[0]) }, 0);
+    // pick a saved account and type the amount
+    tl.to(account, { autoAlpha: 1, duration: 0.25 }, 0.3);
+    tl.set(amount, { x: -6 }, 0.65);
+    tl.to(amount, { autoAlpha: 1, x: 0, duration: 0.3 }, 0.65);
+    // make the QR code
+    tl.to(go, { scale: 0.86, duration: 0.1, yoyo: true, repeat: 1, svgOrigin: origin(go[0]) }, 1.0);
+    tl.to(cells, { opacity: 1, duration: 0.08, stagger: { each: 0.012, from: 'random' } }, 1.15);
+    // the customer scans it and pays: the app shows it at once
+    tl.set(scan, { autoAlpha: 1, y: 0 }, 1.85);
+    tl.to(scan, { y: 32, duration: 0.4, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 1.85);
+    tl.set(scan, { autoAlpha: 0 }, 2.65);
+    fly(tl, q('[data-a="coin"]')[0], QR_PHONE, QR_CENTRE, 2.4, 0.55, 26);
+    pop(tl, paid, 2.95);
+    // and it prints for later
+    tl.to(q('[data-a="pled"]'), { fill: '#ffb02e', duration: 0.1, yoyo: true, repeat: 3 }, 3.1);
+    tl.to(paper, { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'power2.out', svgOrigin: origin(paper[0]) }, 3.2);
+    end(tl, 4.0);
+  },
+};
+
 // ---------- 13. GetPOC: theses on screen, filtered, access by role ----------
 const GP_LOCK = m(5.15, 2.08, 2.75);
 
@@ -1220,6 +1358,7 @@ const SCENES: Record<string, Scene> = {
   'landing-page': landingPage,
   'rbac-app': rbacApp,
   'leaf-iot': leafIot,
+  'qr-payments': qrPayments,
   getpoc,
   'search-engine': searchEngine,
   'file-system': fileSystem,

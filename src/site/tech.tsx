@@ -1,5 +1,6 @@
 import { memo, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import {
+  AppWindow,
   Blocks,
   Cloud,
   ChartSpline,
@@ -77,6 +78,10 @@ const generic = (icon: LucideIcon, color: string): Glyph => ({ generic: icon, co
 
 const TECH: Record<string, Glyph> = {
   python: brand(siPython),
+  tkinter: generic(AppWindow, '#3776ab'),
+  mvc: generic(Layers, '#7c5cff'),
+  databasedesign: generic(Database, '#22b573'),
+  modelagemdedados: generic(Database, '#22b573'),
   langchain: brand(siLangchain, '#1c3c3c'),
   weaviate: generic(Database, '#00a67e'),
   flask: brand(siFlask, '#1f8a9c'),

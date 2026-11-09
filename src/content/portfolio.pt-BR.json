@@ -624,6 +624,24 @@
       ]
     },
     {
+      "id": "qr-payments",
+      "title": "App de cobrança por QR code",
+      "categories": [
+        "systems",
+        "backend"
+      ],
+      "context": "Freelance",
+      "year": "",
+      "summary": "Escolha uma conta bancária salva, digite um valor e gere um QR code de pagamento. O app avisa quando é pago ou imprime para depois.",
+      "highlight": "Avisa na hora que foi pago",
+      "stack": [
+        "Python",
+        "Tkinter",
+        "MVC",
+        "Modelagem de dados"
+      ]
+    },
+    {
       "id": "nebulous",
       "title": "Nebulous, chat em tempo real",
       "categories": [

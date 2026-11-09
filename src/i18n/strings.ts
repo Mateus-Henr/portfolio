@@ -124,6 +124,8 @@ const en = {
     editor: 'Editor',
     guest: 'Guest',
     healthy: 'Healthy',
+    paid: 'Paid',
+    amount: 'R$ 50.00',
   },
 };
 
@@ -250,6 +252,8 @@ const pt: Strings = {
     editor: 'Editor',
     guest: 'Leitor',
     healthy: 'Saudável',
+    paid: 'Pago',
+    amount: 'R$ 50,00',
   },
 };
 

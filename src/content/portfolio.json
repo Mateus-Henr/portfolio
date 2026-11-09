@@ -624,6 +624,24 @@
       ]
     },
     {
+      "id": "qr-payments",
+      "title": "QR code payments app",
+      "categories": [
+        "systems",
+        "backend"
+      ],
+      "context": "Freelance",
+      "year": "",
+      "summary": "Pick a saved bank account, type an amount and get a payment QR code. The app shows when it is paid, or prints it for later.",
+      "highlight": "Knows the moment it's paid",
+      "stack": [
+        "Python",
+        "Tkinter",
+        "MVC",
+        "Database design"
+      ]
+    },
+    {
       "id": "nebulous",
       "title": "Nebulous real-time chat",
       "categories": [
