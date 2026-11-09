@@ -4,9 +4,11 @@ import { usePortfolio } from '../content';
 import { cx } from '../../lib/env';
 import type { SiteConfig } from '../config';
 import { SectionHead, Socials, WindowBar } from '../ui';
+import { useT } from '../../i18n';
 
 function CopyEmail({ email }: { email: string }) {
   const [done, setDone] = useState(false);
+  const t = useT();
   return (
     <button
       type="button"
@@ -19,7 +21,7 @@ function CopyEmail({ email }: { email: string }) {
       }}
     >
       {done ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
-      {done ? 'Copied' : 'Copy email'}
+      {done ? t.contact.copied : t.contact.copy}
     </button>
   );
 }
@@ -28,6 +30,7 @@ export function Contact({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
   const c = portfolio.contact;
   const look = config.contact;
+  const t = useT();
 
   return (
     <section id="contact" className={cx('sec2', 'contact2', `contact2--${look}`)}>
@@ -42,7 +45,7 @@ export function Contact({ config }: { config: SiteConfig }) {
               </p>
               <p className="term__out">{c.headline}</p>
               <p>
-                <span className="term__prompt">$</span> cat contact.txt
+                <span className="term__prompt">$</span> cat {t.contact.file}
               </p>
               <p className="term__out">{c.text}</p>
               {/* on phones "Copy email" and the links share one row (see features.css) */}
@@ -84,6 +87,7 @@ export function Contact({ config }: { config: SiteConfig }) {
 
 export function Footer({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
+  const t = useT();
   const toTop = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -97,7 +101,7 @@ export function Footer({ config }: { config: SiteConfig }) {
         </p>
         {!config.minimalFooter && (
           <a href="#top" onClick={toTop}>
-            Back to top <ArrowUp size={14} aria-hidden="true" />
+            {t.contact.top} <ArrowUp size={14} aria-hidden="true" />
           </a>
         )}
       </div>

@@ -4,6 +4,7 @@ import type { LucideIcon } from 'lucide-react';
 import type { SocialKind } from '../content';
 import { usePortfolio } from './content';
 import { cx } from '../lib/env';
+import { useLang, useT } from '../i18n';
 import { SECTION_ICON, Sticker, SocialIcon, sectionTone } from './icons';
 import { IsoIcon } from './isoIcons';
 import { sectionText, type SectionId, type SiteConfig } from './config';
@@ -34,7 +35,8 @@ export function SectionHead({
   action?: ReactNode;
   align?: 'left' | 'center';
 }) {
-  const text = sectionText(config, id);
+  const { lang } = useLang();
+  const text = sectionText(config, id, lang);
   const centered = align === 'center' || (align === undefined && config.centered);
   return (
     <header className={cx('shead', centered && 'shead--center')} data-reveal>
@@ -195,10 +197,11 @@ export function useGridColumns(grid: { current: HTMLElement | null }, remount?: 
 
 /** Centred "See more" / "See less" button under a list. */
 export function SeeMore({ open, hidden, onClick }: { open: boolean; hidden: number; onClick: () => void }) {
+  const t = useT();
   return (
     <div className="more">
       <button type="button" className="more__btn" aria-expanded={open} onClick={onClick}>
-        {open ? 'See less' : `See more (${hidden})`}
+        {open ? t.more.seeLess : t.more.seeMore(hidden)}
         <ChevronDown size={17} strokeWidth={2.4} aria-hidden="true" className={open ? 'more__chev is-up' : 'more__chev'} />
       </button>
     </div>

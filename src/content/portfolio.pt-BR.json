@@ -1,0 +1,941 @@
+{
+  "profile": {
+    "name": "Matt",
+    "greeting": "Olá, sou o Matt",
+    "role": "Engenheiro de Software",
+    "tagline": "Engenheiro de software do Brasil, criando backends, ferramentas de IA e apps full‑stack.",
+    "location": "Brasil",
+    "summary": [
+      "Sou um engenheiro de software apaixonado por encontrar soluções para problemas desafiadores."
+    ],
+    "facts": [
+      {
+        "label": "Localização",
+        "value": "Brasil"
+      },
+      {
+        "label": "Agora",
+        "value": "Engenheiro de Software na LEVTY"
+      },
+      {
+        "label": "Formação",
+        "value": "Ciência da Computação, UFV"
+      },
+      {
+        "label": "Idiomas",
+        "value": "Português · Inglês (C2)"
+      }
+    ],
+    "stats": [
+      {
+        "value": "2019",
+        "label": "Primeira linha de código"
+      },
+      {
+        "value": "+30%",
+        "label": "Mais acerto na busca de documentos de um chatbot RAG"
+      },
+      {
+        "value": "20",
+        "label": "LLMs avaliados no meu TCC"
+      },
+      {
+        "value": "300+ h",
+        "label": "De cursos online concluídos"
+      }
+    ],
+    "skills": [
+      {
+        "group": "Backend",
+        "items": [
+          "Node.js",
+          "Express",
+          "Java",
+          "Spring Boot",
+          "Clojure",
+          "Flask",
+          "PostgreSQL",
+          "MySQL",
+          "Redis",
+          "Datomic",
+          "Firebase"
+        ]
+      },
+      {
+        "group": "Frontend e mobile",
+        "items": [
+          "React",
+          "TypeScript",
+          "JavaScript",
+          "ClojureScript (Fulcro)",
+          "HTML & CSS",
+          "React Native",
+          "JavaFX"
+        ]
+      },
+      {
+        "group": "IA e dados",
+        "items": [
+          "Python",
+          "LangChain",
+          "Haystack",
+          "Weaviate",
+          "OpenAI API",
+          "PyTorch",
+          "scikit-learn",
+          "Pandas",
+          "NumPy"
+        ]
+      },
+      {
+        "group": "Nuvem e sistemas",
+        "items": [
+          "AWS",
+          "Google Cloud Run",
+          "Docker",
+          "CI/CD",
+          "Linux",
+          "C",
+          "Keycloak",
+          "Azure AD",
+          "Embarcados (TI LaunchPad)"
+        ]
+      },
+      {
+        "group": "Formas de trabalho",
+        "items": [
+          "Scrum",
+          "Kanban",
+          "XP",
+          "Padrões de projeto",
+          "Reuniões com clientes"
+        ]
+      }
+    ]
+  },
+  "socials": [
+    {
+      "kind": "github",
+      "label": "GitHub",
+      "url": "https://github.com/Mateus-Henr",
+      "display": "github.com/Mateus-Henr"
+    },
+    {
+      "kind": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/mateus-henr",
+      "display": "linkedin.com/in/mateus-henr"
+    },
+    {
+      "kind": "email",
+      "label": "E-mail",
+      "url": "mailto:mateush.work@gmail.com",
+      "display": "mateush.work@gmail.com"
+    },
+    {
+      "kind": "phone",
+      "label": "Telefone",
+      "url": "tel:+5531975804023",
+      "display": "+55 31 97580-4023"
+    }
+  ],
+  "career": [
+    {
+      "id": "pronatec",
+      "type": "study",
+      "headline": "Aprendi a programar",
+      "role": "Curso técnico em Desenvolvimento de Sistemas",
+      "org": "PRONATEC",
+      "place": "Contagem, Brasil",
+      "start": "2019-02",
+      "end": "2020-12",
+      "story": "Onde tudo começou: dois anos aprendendo como um software é planejado, escrito e entregue.",
+      "points": [
+        "Fundamentos de Java: estruturas de dados e algoritmos",
+        "Base de web: HTML, CSS e JavaScript",
+        "Trabalho em equipe ágil com Scrum, Kanban e XP"
+      ],
+      "tools": [
+        "Java",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Scrum"
+      ]
+    },
+    {
+      "id": "contract-2020",
+      "type": "work",
+      "headline": "Primeiro emprego: remoto e em inglês",
+      "role": "Desenvolvedor Full-stack",
+      "org": "Freelance",
+      "place": "Remoto · Boston, EUA",
+      "start": "2020-09",
+      "end": "2021-09",
+      "story": "Entrei, do Brasil, em um time distribuído em Boston: conduzindo reuniões e trabalhando em sprints de Scrum, tudo em inglês.",
+      "points": [
+        "Escrevi código Clojure para o Nebulous, um app de chat em tempo real, e mantive sua API em Spring Boot",
+        "Atualizei o front-end em React",
+        "Construí uma landing page à mão com HTML, CSS e JavaScript",
+        "Corrigi e melhorei um sistema de controle de acesso (RBAC) em Java rodando em Linux, usando o Microsoft Azure para monitorar e dar suporte"
+      ],
+      "tools": [
+        "Clojure",
+        "ClojureScript",
+        "Spring Boot",
+        "React",
+        "PostgreSQL",
+        "Java",
+        "Linux",
+        "Azure"
+      ]
+    },
+    {
+      "id": "ufv",
+      "type": "study",
+      "headline": "Comecei a graduação em Ciência da Computação",
+      "role": "Bacharelado em Ciência da Computação",
+      "org": "Universidade Federal de Viçosa (UFV)",
+      "place": "Florestal, Brasil",
+      "start": "2021-05",
+      "end": "2025-07",
+      "story": "Quatro anos de ciência da computação, com pesquisa e projetos paralelos pelo caminho.",
+      "points": [
+        "GetPOC: um app desktop para consultar TCCs, com filtros e acesso por perfil",
+        "Um pequeno buscador em C que monta um índice invertido com uma árvore PATRICIA",
+        "Um gerenciador de sistema de arquivos em C, operado com comandos no estilo Linux"
+      ],
+      "tools": [
+        "Java",
+        "JavaFX",
+        "MySQL",
+        "C"
+      ]
+    },
+    {
+      "id": "iot",
+      "type": "research",
+      "headline": "Pesquisei IoT com a Texas Instruments",
+      "role": "Bolsista de pesquisa · IoT",
+      "org": "UFV, com a Texas Instruments e a Biologia",
+      "place": "Florestal, Brasil",
+      "start": "2021-10",
+      "end": "2022-12",
+      "story": "Cientistas da computação e biólogos trabalhando juntos em um app que mostra o quão saudável uma planta está: uma pequena placa emite luz sobre a folha e analisa a fluorescência que ela devolve.",
+      "points": [
+        "Desenvolvi o app em microcontroladores CC1312R LaunchPad: ele emite luz sobre a folha e mede a sua fluorescência, com requisitos rígidos de desempenho e confiabilidade",
+        "Migrei o código em C para um novo microcontrolador, mantendo-o rápido e compatível",
+        "Escrevi e depurei o firmware no Code Composer Studio"
+      ],
+      "tools": [
+        "C",
+        "React Native",
+        "Sistemas embarcados"
+      ]
+    },
+    {
+      "id": "ml",
+      "type": "research",
+      "headline": "Ensinei um modelo a detectar desperdício de energia",
+      "role": "Bolsista de pesquisa · Machine learning",
+      "org": "Universidade Federal de Viçosa (UFV)",
+      "place": "Florestal, Brasil",
+      "start": "2022-12",
+      "end": "2024-01",
+      "story": "Busquei padrões incomuns em anos de dados de energia elétrica do campus, para frear o desperdício cedo e ajudar o campus a gerir melhor a sua energia.",
+      "points": [
+        "Construí modelos de deep learning (LSTM) que detectam anomalias no histórico dos medidores do campus, inspirados em uma pesquisa da Austrália",
+        "Transformei os padrões incomuns encontrados em propostas para reduzir custos e impacto ambiental",
+        "Mapeei onde instalar microcontroladores para o monitoramento em tempo real",
+        "Apresentei o projeto em uma exposição em Vitória (ES)"
+      ],
+      "tools": [
+        "Python",
+        "Pandas",
+        "NumPy",
+        "scikit-learn",
+        "Seaborn",
+        "Jupyter"
+      ],
+      "link": {
+        "label": "O artigo que inspirou o projeto",
+        "url": "https://www.sciencedirect.com/science/article/abs/pii/S0306261921013647"
+      }
+    },
+    {
+      "id": "contract-2023",
+      "type": "work",
+      "headline": "Criei uma rede social para intercambistas",
+      "role": "Desenvolvedor Full-stack",
+      "org": "Freelance",
+      "place": "Remoto · Boston, EUA",
+      "start": "2023-02",
+      "end": "2023-06",
+      "story": "Um espaço onde intercambistas trocam dicas e aprendem uns com os outros.",
+      "points": [
+        "Construí o app inteiro com o framework Fulcro e Datomic",
+        "Projetei a estrutura do banco de dados e a sua conexão",
+        "Corrigi bugs críticos de segurança e adicionei funcionalidades a um sistema de controle de acesso em Java (Spring, JPA, Hibernate), deixando o login mais seguro contra acessos não autorizados"
+      ],
+      "tools": [
+        "ClojureScript",
+        "Fulcro",
+        "Clojure",
+        "Datomic",
+        "Java",
+        "Spring",
+        "Hibernate"
+      ]
+    },
+    {
+      "id": "rag-research",
+      "type": "research",
+      "headline": "Medi como a IA encontra respostas (RAG)",
+      "role": "Bolsista de pesquisa · TCC",
+      "org": "Universidade Federal de Viçosa (UFV)",
+      "place": "Florestal, Brasil",
+      "start": "2024-03",
+      "end": "2025-07",
+      "story": "Testei cada parte de um pipeline de Retrieval-Augmented Generation para ver o que realmente ajuda um LLM a responder com precisão a partir dos documentos de uma empresa. Virou o meu TCC.",
+      "points": [
+        "Montei um pipeline RAG com busca híbrida (BM25 + busca densa + reranking) usando Haystack e Weaviate, testado em 100 perguntas",
+        "Comparei 3 leitores de PDF, 4 modelos de embedding, tamanhos de chunk, top-k, métodos de busca e templates de prompt",
+        "Avaliei 20 LLMs open-source (até 14B de parâmetros) em uma GPU NVIDIA A100, incluindo quanto tempo cada um leva para responder",
+        "Qwen2.5-14B e OpenHermes-2.5-Mistral-7B superaram o GPT-4-Turbo no BERTScore"
+      ],
+      "tools": [
+        "Python",
+        "Haystack",
+        "Weaviate",
+        "PyTorch",
+        "scikit-learn",
+        "Pandas",
+        "Google Colab"
+      ]
+    },
+    {
+      "id": "funarbe",
+      "type": "work",
+      "headline": "Criei um assistente de IA para os documentos da empresa",
+      "role": "Estagiário de Engenharia de IA",
+      "org": "FUNARBE",
+      "place": "Remoto · Los Angeles, EUA",
+      "start": "2024-06",
+      "end": "2024-12",
+      "story": "Um chatbot que responde às perguntas dos funcionários usando os próprios documentos da empresa, construído a partir do que a pesquisa do meu TCC descobriu.",
+      "points": [
+        "Refiz todo o pipeline RAG: testei leitores de PDF e adotei o PyMuPDF",
+        "Um pipeline de ingestão de PDF para embeddings que reduziu as alucinações",
+        "Reformulei cada pergunta de várias formas para ampliar a busca: 30% mais acerto ao encontrar documentos",
+        "Projetei o banco Weaviate na nuvem e usei modelos da OpenAI (GPT-4o) e da DeepSeek via LangChain, da busca até a resposta final",
+        "Publiquei o app full-stack na AWS em containers Docker, com cache semântico em Redis e PostgreSQL"
+      ],
+      "tools": [
+        "Python",
+        "LangChain",
+        "OpenAI",
+        "AWS",
+        "Flask",
+        "React",
+        "TypeScript",
+        "Redis",
+        "Docker",
+        "Keycloak",
+        "PostgreSQL",
+        "Weaviate"
+      ]
+    },
+    {
+      "id": "nai",
+      "type": "milestone",
+      "headline": "Dei monitoria a colegas como professor de inclusão",
+      "role": "Professor de Inclusão",
+      "org": "Núcleo de Apoio à Inclusão (NAI)",
+      "place": "Florestal, Brasil",
+      "start": "2024-08",
+      "end": "2024-09",
+      "story": "Ajudei estudantes de graduação em Matemática Discreta, Algoritmos e Estruturas de Dados, e Cálculo I.",
+      "points": [
+        "Expliquei conceitos, resolvi exercícios junto com os alunos e os ajudei a melhorar os seus resultados"
+      ],
+      "tools": [],
+      "certificate": "nai"
+    },
+    {
+      "id": "freelance-2024",
+      "type": "work",
+      "headline": "Projetei um backend do zero",
+      "role": "Desenvolvedor Backend",
+      "org": "Freelance",
+      "place": "Remoto · Los Angeles, EUA",
+      "start": "2024-09",
+      "end": "2025-05",
+      "story": "Um app web que compara empresas em métricas de marketing, como principais pontos fortes e fracos. Ele usa LLMs sobre dados públicos para dar a times de marketing insights para a sua estratégia de comunicação.",
+      "points": [
+        "Escolhi a stack e desenhei uma arquitetura limpa",
+        "Middlewares, validação de schemas, rotas de API, tratamento de erros e modelagem do banco de dados",
+        "Firebase para login, permissões e dados; Instructor com Perplexity e OpenAI para coletar dados"
+      ],
+      "tools": [
+        "Node.js",
+        "Express",
+        "Firebase",
+        "OpenAI",
+        "Perplexity"
+      ]
+    },
+    {
+      "id": "campus-mobile",
+      "type": "milestone",
+      "headline": "Semifinalista no Campus Mobile",
+      "role": "Semifinalista",
+      "org": "Campus Mobile",
+      "place": "São Paulo, Brasil",
+      "start": "2025-01",
+      "end": "2025-02",
+      "story": "MikoChain: um app que rastreia alimentos ao longo de toda a cadeia de suprimentos, com a segurança do blockchain.",
+      "points": [
+        "Semifinalista nacional do Campus Mobile, competição do Instituto Claro",
+        "Desenvolvi o MVP com Node.js e React",
+        "Apresentei o pitch na semifinal presencial na USP, com equipes de todas as regiões do Brasil"
+      ],
+      "tools": [
+        "Node.js",
+        "React",
+        "Blockchain"
+      ],
+      "certificate": "campus-mobile"
+    },
+    {
+      "id": "ifes",
+      "type": "milestone",
+      "headline": "Apresentei minha pesquisa no IFES",
+      "role": "Expositor",
+      "org": "IFES",
+      "place": "Vitória, Brasil",
+      "start": "2025-03",
+      "end": "2025-03",
+      "story": "Mostrei aos visitantes como o machine learning pode encontrar desperdício de energia nos dados do campus.",
+      "points": [
+        "Apresentei o projeto de detecção de anomalias, incluindo onde instalar os microcontroladores de monitoramento"
+      ],
+      "tools": [],
+      "certificate": "ifes"
+    },
+    {
+      "id": "freelance-2025",
+      "type": "work",
+      "headline": "Backend do Capush, um app para iOS",
+      "role": "Desenvolvedor Backend",
+      "org": "Freelance",
+      "place": "Remoto · Los Angeles, EUA",
+      "start": "2025-05",
+      "end": "2026-08",
+      "story": "Capush: um app para iOS, disponível na App Store, que salva links de qualquer plataforma em coleções, com uma prévia caprichada de cada um.",
+      "points": [
+        "Projetei e entreguei todo o backend do zero: login, permissões e armazenamento de arquivos escalável",
+        "Uma API REST segura em TypeScript, com controle de acesso por perfil (RBAC) e alterações de permissão auditáveis",
+        "Middlewares, validação de schemas, rotas de API, tratamento de erros e schemas no Firestore pensados para leituras rápidas",
+        "Deploy automático no Google Cloud Run: um pipeline de CI/CD roda a cada commit enviado ao GitHub"
+      ],
+      "tools": [
+        "Node.js",
+        "Express",
+        "TypeScript",
+        "Firebase",
+        "Google Cloud Run",
+        "CI/CD"
+      ]
+    },
+    {
+      "id": "graduation",
+      "type": "milestone",
+      "headline": "Me formei em Ciência da Computação",
+      "role": "Bacharelado em Ciência da Computação",
+      "org": "Universidade Federal de Viçosa (UFV)",
+      "place": "Florestal, Brasil",
+      "start": "2025-07",
+      "end": "2025-07",
+      "story": "Concluí a graduação, com o benchmark de RAG como TCC: “Building a Sales Strategy Assistant Utilizing RAG and LLMs”.",
+      "points": [],
+      "tools": []
+    },
+    {
+      "id": "levty",
+      "type": "work",
+      "headline": "Engenheiro de Software na LEVTY",
+      "role": "Engenheiro de Software",
+      "org": "LEVTY",
+      "place": "Remoto · Belo Horizonte, Brasil",
+      "start": "2025-05",
+      "story": "Ajudando a construir os serviços digitais que uma prefeitura usa para gerenciar as solicitações dos cidadãos.",
+      "points": [
+        "Projetando a arquitetura do zero: controle de acesso por perfil (RBAC) entre secretarias, interface e web services, com padrões de projeto",
+        "Desenhando processos de BPMS, incluindo um despachante que encaminha cada solicitação do cidadão para a secretaria certa",
+        "Construindo componentes React reutilizáveis para um sistema de Gestão Eletrônica de Documentos (GED), cobrindo o ciclo de vida de cada documento",
+        "Conduzindo reuniões de levantamento de requisitos com o cliente, inclusive presencialmente, e transformando-as em especificações técnicas"
+      ],
+      "tools": [
+        "Arquitetura",
+        "RBAC",
+        "BPMS",
+        "React",
+        "Web services",
+        "Padrões de projeto"
+      ]
+    }
+  ],
+  "projectCategories": [
+    {
+      "id": "backend",
+      "label": "Backend"
+    },
+    {
+      "id": "frontend",
+      "label": "Frontend"
+    },
+    {
+      "id": "ai",
+      "label": "IA e Machine Learning"
+    },
+    {
+      "id": "mobile",
+      "label": "Mobile e IoT"
+    },
+    {
+      "id": "systems",
+      "label": "Sistemas e Desktop"
+    }
+  ],
+  "projects": [
+    {
+      "id": "city-hall",
+      "title": "Plataforma de solicitações",
+      "categories": [
+        "backend",
+        "frontend"
+      ],
+      "context": "LEVTY",
+      "year": "2025 – hoje",
+      "summary": "Uma plataforma que uma prefeitura usa para receber as solicitações dos cidadãos e encaminhá-las para a secretaria certa.",
+      "highlight": "Arquitetura criada do zero",
+      "stack": [
+        "Arquitetura",
+        "RBAC",
+        "BPMS",
+        "React",
+        "Web services",
+        "Padrões de projeto"
+      ]
+    },
+    {
+      "id": "rag-chatbot",
+      "title": "Chatbot sobre documentos",
+      "categories": [
+        "ai",
+        "backend"
+      ],
+      "context": "FUNARBE · Estágio",
+      "year": "2024",
+      "summary": "Responde às perguntas dos funcionários usando os documentos internos da empresa.",
+      "highlight": "+30% de acerto na busca de documentos",
+      "stack": [
+        "Python",
+        "LangChain",
+        "Weaviate",
+        "AWS",
+        "Docker",
+        "Redis",
+        "Flask",
+        "React"
+      ]
+    },
+    {
+      "id": "rag-benchmark",
+      "title": "Benchmark de RAG",
+      "categories": [
+        "ai"
+      ],
+      "context": "UFV · TCC",
+      "year": "2024 – 2025",
+      "summary": "Medi como leitores de PDF, embeddings, tamanho de chunk, top-k, busca híbrida e prompts mudam a qualidade das respostas, em 20 LLMs.",
+      "highlight": "LLMs abertos > GPT-4-Turbo no BERTScore",
+      "stack": [
+        "Python",
+        "Haystack",
+        "Weaviate",
+        "PyTorch",
+        "Google Colab"
+      ]
+    },
+    {
+      "id": "energy-anomaly",
+      "title": "Anomalias de energia",
+      "categories": [
+        "ai"
+      ],
+      "context": "UFV · Pesquisa",
+      "year": "2023",
+      "summary": "Modelos LSTM que encontram consumo de energia incomum em anos de dados dos medidores do campus, para evitar desperdício.",
+      "highlight": "Apresentado em Vitória (ES)",
+      "stack": [
+        "Python",
+        "Pandas",
+        "scikit-learn",
+        "Seaborn"
+      ]
+    },
+    {
+      "id": "battle-cards",
+      "title": "Battle cards de empresas",
+      "categories": [
+        "backend",
+        "ai"
+      ],
+      "context": "Freelance",
+      "year": "2024 – 2025",
+      "summary": "Compara empresas em métricas de marketing, usando dados públicos coletados com LLMs.",
+      "highlight": "Criado do zero",
+      "stack": [
+        "Node.js",
+        "Express",
+        "Firebase",
+        "OpenAI",
+        "Perplexity"
+      ]
+    },
+    {
+      "id": "bookmarks",
+      "title": "Capush · backend de app iOS",
+      "categories": [
+        "backend",
+        "mobile"
+      ],
+      "context": "Freelance",
+      "year": "2025 – 2026",
+      "summary": "Backend do Capush, um app para iOS na App Store que salva links em coleções, com prévias completas.",
+      "highlight": "Disponível na App Store",
+      "stack": [
+        "Node.js",
+        "TypeScript",
+        "Express",
+        "Firebase",
+        "Google Cloud Run"
+      ]
+    },
+    {
+      "id": "nebulous",
+      "title": "Nebulous, chat em tempo real",
+      "categories": [
+        "backend",
+        "frontend"
+      ],
+      "context": "Freelance",
+      "year": "2020 – 2021",
+      "summary": "Um app web de chat em tempo real, com API em Clojure e Spring Boot e front-end em React.",
+      "stack": [
+        "Clojure",
+        "Java",
+        "Spring Boot",
+        "React",
+        "PostgreSQL"
+      ]
+    },
+    {
+      "id": "exchange-network",
+      "title": "Rede de intercambistas",
+      "categories": [
+        "frontend",
+        "backend"
+      ],
+      "context": "Freelance",
+      "year": "2023",
+      "summary": "Uma rede social onde intercambistas compartilham informações e aprendem juntos.",
+      "highlight": "App e banco de dados completos",
+      "stack": [
+        "ClojureScript",
+        "Fulcro",
+        "Datomic"
+      ]
+    },
+    {
+      "id": "mikochain",
+      "title": "MikoChain",
+      "categories": [
+        "frontend",
+        "backend"
+      ],
+      "context": "Campus Mobile",
+      "year": "2025",
+      "summary": "Rastreia alimentos ao longo de toda a cadeia de suprimentos, com a segurança do blockchain.",
+      "highlight": "Semifinalista nacional",
+      "stack": [
+        "Node.js",
+        "React",
+        "Blockchain"
+      ]
+    },
+    {
+      "id": "landing-page",
+      "title": "Landing page",
+      "categories": [
+        "frontend"
+      ],
+      "context": "Freelance",
+      "year": "2021",
+      "summary": "Uma landing page de produto, feita à mão com tecnologias web puras.",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ]
+    },
+    {
+      "id": "rbac-app",
+      "title": "App de controle de acesso",
+      "categories": [
+        "backend"
+      ],
+      "context": "Freelance",
+      "year": "2021",
+      "summary": "Correções e manutenção em uma aplicação Java de controle de acesso por perfil (RBAC).",
+      "stack": [
+        "Java",
+        "PostgreSQL",
+        "Proxmox",
+        "Azure AD"
+      ]
+    },
+    {
+      "id": "leaf-iot",
+      "title": "Monitor de saúde de plantas",
+      "categories": [
+        "mobile"
+      ],
+      "context": "UFV · Texas Instruments",
+      "year": "2021 – 2022",
+      "summary": "Um app que mostra o quão saudável uma planta está: ele emite luz sobre uma folha e analisa a fluorescência que ela devolve.",
+      "stack": [
+        "C",
+        "TI LaunchPad",
+        "React Native"
+      ]
+    },
+    {
+      "id": "getpoc",
+      "title": "GetPOC",
+      "categories": [
+        "systems"
+      ],
+      "context": "UFV · Projeto de disciplina",
+      "year": "Graduação",
+      "summary": "App desktop para consultar TCCs (orientador, data, autores, PDF), com filtros e acesso por perfil.",
+      "stack": [
+        "Java",
+        "JavaFX",
+        "MySQL",
+        "CSS"
+      ]
+    },
+    {
+      "id": "search-engine",
+      "title": "Mini buscador",
+      "categories": [
+        "systems"
+      ],
+      "context": "UFV · Projeto de disciplina",
+      "year": "Graduação",
+      "summary": "Monta o índice invertido de um buscador a partir de arquivos de texto, usando uma árvore PATRICIA.",
+      "stack": [
+        "C"
+      ]
+    },
+    {
+      "id": "file-system",
+      "title": "Gerenciador de arquivos",
+      "categories": [
+        "systems"
+      ],
+      "context": "UFV · Projeto de disciplina",
+      "year": "Graduação",
+      "summary": "Um pequeno sistema de arquivos operado com comandos no estilo Linux.",
+      "stack": [
+        "C",
+        "Linux"
+      ]
+    }
+  ],
+  "certificates": [
+    {
+      "id": "java",
+      "kind": "course",
+      "tech": "Java",
+      "title": "The Complete Java Developer Course",
+      "issuer": "Udemy",
+      "hours": "80,5 h",
+      "file": "https://drive.google.com/file/d/1CvCNGxmBYLyzNQwY85zVWjXsGc-VLmD0/view?usp=sharing",
+      "course": "https://www.udemy.com/course/java-the-complete-java-developer-course"
+    },
+    {
+      "id": "web-dev",
+      "kind": "course",
+      "tech": "HTML",
+      "title": "The Complete Web Development Bootcamp",
+      "issuer": "Udemy",
+      "hours": "65,5 h",
+      "file": "https://drive.google.com/file/d/11Ain5mtpae3r2lO76OIEdTvDnhlPByxq/view?usp=sharing",
+      "course": "https://www.udemy.com/course/the-complete-web-development-bootcamp/"
+    },
+    {
+      "id": "microservices",
+      "kind": "course",
+      "tech": "Node.js",
+      "title": "Microservices with Node.js and React",
+      "issuer": "Udemy",
+      "hours": "54 h",
+      "file": "https://drive.google.com/file/d/1KH6WJulRwg0jZ_kPtuc6XypR21U0P3Bs/view?usp=sharing",
+      "course": "https://www.udemy.com/course/microservices-with-node-js-and-react"
+    },
+    {
+      "id": "ml-ds",
+      "kind": "course",
+      "tech": "Python",
+      "title": "Machine Learning & Data Science Bootcamp",
+      "issuer": "Udemy",
+      "hours": "44 h",
+      "file": "https://drive.google.com/file/d/1LyaI5fnAoInG4Rv6WKC6AIbyYcWX4Wm1/view?usp=sharing",
+      "course": "https://www.udemy.com/course/complete-machine-learning-and-data-science-zero-to-mastery/"
+    },
+    {
+      "id": "design-patterns",
+      "kind": "course",
+      "tech": "Java",
+      "title": "Design Patterns in Java",
+      "issuer": "Udemy",
+      "hours": "17 h",
+      "course": "https://www.udemy.com/course/design-patterns-in-java-concepts-hands-on-projects"
+    },
+    {
+      "id": "dsa-java",
+      "kind": "course",
+      "tech": "Java",
+      "title": "Data Structures and Algorithms in Java",
+      "issuer": "Udemy",
+      "hours": "16 h",
+      "file": "https://drive.google.com/file/d/1m01MR5Xhpuuu9HBHsbJQBl2Lh5E03S2d/view?usp=sharing",
+      "course": "https://www.udemy.com/course/data-structures-and-algorithms-deep-dive-using-java/"
+    },
+    {
+      "id": "verilog",
+      "kind": "course",
+      "tech": "Verilog",
+      "title": "Verilog HDL: VLSI Hardware Design",
+      "issuer": "Udemy",
+      "hours": "12,5 h",
+      "file": "https://drive.google.com/file/d/1DmJqFVtJr3IDhAo_xbgG5lQYy_v-oyY-/view?usp=sharing",
+      "course": "https://www.udemy.com/course/verilog-hdl-vlsi-hardware-design-comprehensive-masterclass"
+    },
+    {
+      "id": "linux",
+      "kind": "course",
+      "tech": "Linux",
+      "title": "Linux Mastery",
+      "issuer": "Udemy",
+      "hours": "11,5 h",
+      "file": "https://drive.google.com/file/d/15ytHMJDFcwT_CMZtdlGsMgN-SjhFNGjW/view?usp=sharing",
+      "course": "https://www.udemy.com/course/linux-mastery/"
+    },
+    {
+      "id": "clojurescript",
+      "kind": "course",
+      "tech": "ClojureScript",
+      "title": "Learning ClojureScript",
+      "issuer": "Udemy",
+      "hours": "2 h",
+      "file": "https://drive.google.com/file/d/1e43TqDk3LIPxqbOxtInOb7uV-12qfMuJ/view?usp=drive_link",
+      "course": "https://www.udemy.com/course/learning-clojurescript/"
+    },
+    {
+      "id": "spring-boot",
+      "kind": "course",
+      "tech": "Spring Boot",
+      "title": "Spring Boot",
+      "issuer": "Udemy",
+      "file": "https://drive.google.com/file/d/1HYsErt_GsZCe04B9UxCXiVv9em8uvv6Q/view?usp=sharing"
+    },
+    {
+      "id": "java-backend-dio",
+      "kind": "course",
+      "tech": "Java",
+      "title": "Bootcamp Java Backend",
+      "issuer": "Santander · DIO",
+      "file": "https://www.dio.me/certificate/IBV8CDHI/share"
+    },
+    {
+      "id": "english-c2",
+      "kind": "language",
+      "tech": "English",
+      "title": "Inglês · C2",
+      "issuer": "Certificado de idioma",
+      "file": "https://drive.google.com/file/d/1lRbc1BjkmNlqZWDhvsitOa7rx5D6lT0f/view?usp=sharing"
+    },
+    {
+      "id": "english-b2-course",
+      "kind": "language",
+      "tech": "English",
+      "title": "Inglês · B2",
+      "issuer": "Curso de idioma",
+      "hours": "136 h",
+      "file": "https://drive.google.com/file/d/1EMy5PHPy5TdVnUk_O__c2J8VWD91kbwo/view?usp=sharing"
+    },
+    {
+      "id": "english-b2",
+      "kind": "language",
+      "tech": "English",
+      "title": "Inglês · B2",
+      "issuer": "Certificado de idioma",
+      "file": "https://drive.google.com/file/d/1GVeg6DCotZ9H2eK2pdnz3XMK5zdUvY0m/view?usp=sharing"
+    },
+    {
+      "id": "campus-mobile",
+      "kind": "award",
+      "tech": "Award",
+      "title": "Campus Mobile · Semifinalista",
+      "issuer": "Campus Mobile · LSITEC",
+      "year": "2025",
+      "file": "https://easycertificates.lsitec.org.br/certificate/4e3ea623-ccdc-450f-86ab-1811d86375c7/"
+    },
+    {
+      "id": "sebrae-fator-s",
+      "kind": "award",
+      "tech": "Award",
+      "title": "SEBRAE Fator S · Medalha de Ouro",
+      "issuer": "App web para a comunidade universitária",
+      "year": "2024"
+    },
+    {
+      "id": "ifes",
+      "kind": "award",
+      "tech": "Presentation",
+      "title": "Exposição de pesquisa no IFES",
+      "issuer": "IFES · Vitória",
+      "year": "2025",
+      "file": "https://drive.google.com/file/d/1k5sVuN7aM7fdSuP7NvdqT-zcTFgETe6v/view?usp=sharing"
+    },
+    {
+      "id": "nai",
+      "kind": "award",
+      "tech": "Teaching",
+      "title": "Professor de Inclusão",
+      "issuer": "Núcleo de Apoio à Inclusão (NAI)",
+      "year": "2024",
+      "file": "https://drive.google.com/file/d/1fS02duuTq9B-Zs-paKu9DcNCuYNttgOM/view?usp=sharing"
+    }
+  ],
+  "contact": {
+    "headline": "Vamos construir algo juntos",
+    "text": "Tem um projeto, uma vaga ou uma dúvida? Mande uma mensagem, em português ou em inglês.",
+    "email": "mateush.work@gmail.com",
+    "phone": "+55 31 97580-4023"
+  }
+}

@@ -1,9 +1,10 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { StoryStage } from '../story/StoryStage';
 import type { StoryKit } from '../story/useStory';
 import { Layer } from '../components/stage/Layer';
 import { pop, shot } from '../story/kit';
 import { TechGlyph } from '../site/tech';
+import { useT } from '../i18n';
 
 /*
   Story: "The Architecture Machine".
@@ -142,6 +143,16 @@ function house(name: string, x0: number, y0: number, x1: number, y1: number, h: 
   };
 }
 
+/** "CITY HALL" on the building, in the page's language. */
+function HallSign({ x, y }: { x: number; y: number }) {
+  const t = useT();
+  return (
+    <text x={x} y={y} textAnchor="middle" className="v21-hall">
+      {t.story.hall}
+    </text>
+  );
+}
+
 function cityHall(): Thing {
   const lower: Six = [2.85, 2.85, 0, 4.15, 4.15, 0.9];
   const upper: Six = [3.15, 3.15, 0.9, 3.85, 3.85, 1.4];
@@ -171,7 +182,7 @@ function cityHall(): Thing {
         <path d={`M${dx - r * 0.55} ${dy - r * 0.6} A${r * 0.7} ${r * 0.7} 0 0 1 ${dx} ${dy - r * 1.02}`} fill="none" stroke="#a996ff" strokeWidth={4} strokeLinecap="round" />
         <path d={`M${fx} ${fy} V${fy - 62}`} stroke="#3b3a55" strokeWidth={3} />
         <path className="v21-flag" d={`M${fx} ${fy - 62} l30 9 l-30 9 Z`} fill="#ff5c8a" />
-        <text x={dx} y={iso(3.5, 4.15, 0.95)[1] + 4} textAnchor="middle" className="v21-hall">CITY HALL</text>
+        <HallSign x={dx} y={iso(3.5, 4.15, 0.95)[1] + 4} />
       </>
     ),
   };
@@ -482,30 +493,30 @@ const REQ_C = [iso(5.2, 5.2, 0.15), iso(3.5, 3.5, 0.5)].map(([x, y], i) => ({ x,
 const POWER = [iso(1.3, 5.3, -1.05), iso(1.3, 5.3, -0.7)].map(([x, y], i) => ({ x, y: y + (i === 0 ? SPLIT.infra : SPLIT.data) }));
 
 interface LayerLabel {
+  /** Also the key of its title and note in src/i18n/strings.ts (story.layers). */
   name: string;
-  title: string;
-  note: string;
   tools: string[];
   side: 'left' | 'right';
   anchor: [number, number];
 }
 
 const LABELS: LayerLabel[] = [
-  { name: 'label-city', title: 'Interface', note: 'what citizens use', tools: ['React', 'TypeScript'], side: 'right', anchor: [iso(7, 0, 1.4)[0], iso(7, 0, 1.4)[1] + SPLIT.city] },
-  { name: 'label-ground', title: 'Services & API', note: 'rules and access (RBAC)', tools: ['Node.js', 'Express', 'Spring Boot'], side: 'left', anchor: [iso(0, 7, 0)[0], iso(0, 7, 0)[1] + SPLIT.ground] },
-  { name: 'label-data', title: 'Data', note: 'every request saved', tools: ['PostgreSQL', 'Firebase'], side: 'right', anchor: [iso(6.75, 0.25, -0.7)[0], iso(6.75, 0.25, -0.7)[1] + SPLIT.data] },
-  { name: 'label-infra', title: 'Infrastructure', note: 'servers and network', tools: ['Docker', 'Linux'], side: 'left', anchor: [iso(0.5, 6.5, -1.7)[0], iso(0.5, 6.5, -1.7)[1] + SPLIT.infra] },
+  { name: 'label-city', tools: ['React', 'TypeScript'], side: 'right', anchor: [iso(7, 0, 1.4)[0], iso(7, 0, 1.4)[1] + SPLIT.city] },
+  { name: 'label-ground', tools: ['Node.js', 'Express', 'Spring Boot'], side: 'left', anchor: [iso(0, 7, 0)[0], iso(0, 7, 0)[1] + SPLIT.ground] },
+  { name: 'label-data', tools: ['PostgreSQL', 'Firebase'], side: 'right', anchor: [iso(6.75, 0.25, -0.7)[0], iso(6.75, 0.25, -0.7)[1] + SPLIT.data] },
+  { name: 'label-infra', tools: ['Docker', 'Linux'], side: 'left', anchor: [iso(0.5, 6.5, -1.7)[0], iso(0.5, 6.5, -1.7)[1] + SPLIT.infra] },
 ];
 
 function Label({ l }: { l: LayerLabel }) {
+  const words = useT().story.layers[l.name];
   const w = 520;
   const h = 124;
   const x = l.side === 'right' ? l.anchor[0] + 70 : l.anchor[0] - 70 - w;
   const y = l.anchor[1] - h / 2;
   return (
     <Layer name={l.name} x={x} y={y} w={w} h={h} className={`v21-label v21-label--${l.side}`}>
-      <strong>{l.title}</strong>
-      <small>{l.note}</small>
+      <strong>{words.title}</strong>
+      <small>{words.note}</small>
       <span className="v21-label__tools">
         {l.tools.map((t) => (
           <TechGlyph key={t} name={t} size={36} />
@@ -516,6 +527,11 @@ function Label({ l }: { l: LayerLabel }) {
 }
 
 export function Scene() {
+  const t = useT();
+  const words = useRef(t);
+  words.current = t;
+  const caption = (key: keyof typeof t.story.captions) => () => words.current.story.captions[key];
+
   const build = ({ tl, L, q, say }: StoryKit) => {
     const cam = L('camera');
     const view = (cx: number, cy: number, z: number, at: number, d = 1.2, ease = 'power2.inOut') => shot(tl, cam, cx, cy, z, at, d, ease, [W, H]);
@@ -541,7 +557,7 @@ export function Scene() {
     ['pulse-a', 'pulse-b', 'pulse-c', 'pulse-p'].forEach((p) => tl.set(L(p), { x: 0, y: 0, xPercent: -50, yPercent: -50 }, 0));
 
     // ---------- 1. a blueprint ----------
-    say(0.2, 'Every system starts as a blueprint.');
+    say(0.2, caption('blueprint'));
     tl.to(L('plan-sheet'), { scaleY: 1, duration: 0.6, ease: 'power3.out' }, 0.2);
     tl.to(L('plan-grid'), { autoAlpha: 1, duration: 0.4 }, 0.5);
     tl.to(L('plan-line'), { drawSVG: '100%', duration: 1.4, stagger: 0.03, ease: 'power1.inOut' }, 0.6);
@@ -549,7 +565,7 @@ export function Scene() {
 
     // ---------- 2. built block by block ----------
     const make = 2.7;
-    say(make, 'Then it’s built, block by block.');
+    say(make, caption('built'));
     view(800, 462, 1.28, make, 1.6);
     tl.to([L('infra'), L('data')], { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out' }, make);
     tl.to(L('ground'), { autoAlpha: 1, duration: 0.5 }, make + 0.2);
@@ -564,7 +580,7 @@ export function Scene() {
 
     // ---------- 3. it separates into layers ----------
     const split = 5.4;
-    say(split, 'Underneath, the city is a machine made of layers.');
+    say(split, caption('layers'));
     view(800, 520, 0.72, split, 1.6);
     tl.to(L('plate'), { autoAlpha: 1, duration: 0.4 }, split + 0.1);
     tl.to(L('city'), { y: SPLIT.city, duration: 1.4, ease: 'power3.inOut' }, split + 0.1);
@@ -574,7 +590,7 @@ export function Scene() {
 
     // ---------- 4. each layer, on its own ----------
     const float = split + 1.7;
-    say(float, 'Interface, services, data, infrastructure: each layer has one job.');
+    say(float, caption('jobs'));
     LABELS.forEach((l, i) => {
       const el = L(l.name)[0];
       tl.to(el, { autoAlpha: 1, duration: 0.4 }, float + i * 0.25);
@@ -587,7 +603,7 @@ export function Scene() {
 
     // ---------- 5. the layers talk ----------
     const talk = float + 2.6;
-    say(talk, 'A citizen sends a request, and the layers pass it along.');
+    say(talk, caption('request'));
     tl.set(L('signals'), { autoAlpha: 1 }, talk);
     tl.to(L('beam'), { drawSVG: '100%', duration: 0.6, stagger: 0.15 }, talk);
     tl.set(L('pulse-a'), { autoAlpha: 1, x: REQ_A[0].x, y: REQ_A[0].y }, talk + 0.4);
@@ -610,7 +626,7 @@ export function Scene() {
 
     // ---------- 6. back together ----------
     const join = talk + 4.4;
-    say(join, 'From blueprint to a city that works.');
+    say(join, caption('works'));
     tl.to([L('signals'), L('resolved'), ...LABELS.map((l) => L(l.name)[0])], { autoAlpha: 0, duration: 0.4 }, join - 0.2);
     tl.to(L('guide'), { drawSVG: '0%', duration: 0.4 }, join - 0.2);
     tl.to(L('plate'), { autoAlpha: 0, duration: 0.4 }, join + 0.8);
@@ -629,9 +645,9 @@ export function Scene() {
       look="bare"
       width={W}
       height={H}
-      title="The Architecture Machine"
-      logline="A city that is really a system in layers, from blueprint to finished platform."
-      label="Animation: a blueprint of a small city draws itself, then the city is built from it with City Hall in the middle. The city separates into floating layers labelled interface, services and access, data and infrastructure, each with the tools Matt uses. A citizen's request travels down through the layers and back to City Hall, and the layers come back together into the finished city."
+      title={t.story.title}
+      logline={t.story.logline}
+      label={t.story.label}
       build={build}
     >
       <Layer name="shadow" x={360} y={790} w={880} h={120} className="v21-shadow" />

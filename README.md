@@ -28,6 +28,13 @@ the about text and quick facts, skills, career steps, projects, certificates
 and contact details. Edit the JSON and the page updates; no code changes are
 needed.
 
+The page also speaks Brazilian Portuguese: the same content, translated, is in
+**`src/content/portfolio.pt-BR.json`** (keep both files in step), and the
+interface texts (buttons, section titles, dates, the opening animation's
+captions) are in **`src/i18n/strings.ts`**, in both languages. Visitors switch
+language with the button in the navigation; the first visit follows the
+browser's language, and `?lang=pt` or `?lang=en` in the address forces one.
+
 - **Career steps** (`career`): `type` is `study`, `work`, `research` or
   `milestone`. Dates use `YYYY-MM`; leave `end` out for something that is still
   going on.
@@ -44,7 +51,9 @@ more", and so on) are in the `config` object in `src/App.tsx`.
 
 | Path | What it is |
 | --- | --- |
-| `src/content/portfolio.json` | All the text and links |
+| `src/content/portfolio.json` | All the text and links (English) |
+| `src/content/portfolio.pt-BR.json` | The same, in Portuguese |
+| `src/i18n/` | Interface texts in both languages, and the language switch |
 | `src/App.tsx` | Page layout options |
 | `src/scene/` | The opening animation and the colour theme |
 | `src/site/` | Navigation, sections, project-card animations, styles |

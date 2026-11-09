@@ -46,11 +46,12 @@ export const SECTION_ICON_ALT: Record<SectionId, LucideIcon> = {
   contact: Send,
 };
 
-export const CAREER_META: Record<CareerType, { label: string; Icon: LucideIcon }> = {
-  study: { label: 'Study', Icon: GraduationCap },
-  work: { label: 'Work', Icon: BriefcaseBusiness },
-  research: { label: 'Research', Icon: FlaskConical },
-  milestone: { label: 'Milestone', Icon: Trophy },
+/** The icon for each kind of career step (the names are in src/i18n/strings.ts). */
+export const CAREER_META: Record<CareerType, { Icon: LucideIcon }> = {
+  study: { Icon: GraduationCap },
+  work: { Icon: BriefcaseBusiness },
+  research: { Icon: FlaskConical },
+  milestone: { Icon: Trophy },
 };
 
 export const CATEGORY_ICON: Record<string, LucideIcon> = {
@@ -62,11 +63,12 @@ export const CATEGORY_ICON: Record<string, LucideIcon> = {
   systems: SquareTerminal,
 };
 
-export const CERT_META: Record<CertificateKind | 'all', { label: string; Icon: LucideIcon }> = {
-  all: { label: 'All', Icon: LayoutGrid },
-  course: { label: 'Courses', Icon: FileText },
-  language: { label: 'Languages', Icon: Globe },
-  award: { label: 'Awards & events', Icon: Trophy },
+/** The icon for each kind of certificate (the names are in src/i18n/strings.ts). */
+export const CERT_META: Record<CertificateKind | 'all', { Icon: LucideIcon }> = {
+  all: { Icon: LayoutGrid },
+  course: { Icon: FileText },
+  language: { Icon: Globe },
+  award: { Icon: Trophy },
 };
 
 /**

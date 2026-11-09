@@ -1,6 +1,7 @@
 import { useRef, type ReactNode, type SVGProps } from 'react';
 import { gsap, useGSAP } from '../lib/motion';
 import { SHOTS, isPhone, prefersReducedMotion } from '../lib/env';
+import { useT, type Strings } from '../i18n';
 
 /*
   One small isometric scene per project, drawn like the opening city.
@@ -187,9 +188,15 @@ function Lock({ fill = '#b8bfcd', ...rest }: { fill?: string } & SVGProps<SVGCir
   );
 }
 
-/** A small label in a rounded pill. */
-function Tag({ p, text, fill = '#fff', color = '#2b2d42', w }: { p: P2; text: string; fill?: string; color?: string; w?: number }) {
-  const width = w ?? text.length * 4.6 + 10;
+/** A word drawn in a scene, in the page's language (scenes in src/i18n/strings.ts). */
+function Word({ id }: { id: keyof Strings['scenes'] }) {
+  const t = useT();
+  return <>{t.scenes[id]}</>;
+}
+
+/** A small label in a rounded pill (give `w` when the text is not a plain string). */
+function Tag({ p, text, fill = '#fff', color = '#2b2d42', w }: { p: P2; text: ReactNode; fill?: string; color?: string; w?: number }) {
+  const width = w ?? (typeof text === 'string' ? text.length * 4.6 + 10 : 48);
   return (
     <g>
       <rect x={p[0] - width / 2} y={p[1] - 6.5} width={width} height={13} rx={6.5} fill={fill} stroke="rgba(40,30,90,0.12)" strokeWidth={0.8} />
@@ -285,7 +292,9 @@ const cityHall: Scene = {
       </At>
       <g>
         <rect x={12} y={16} width={86} height={22} rx={11} fill="#fff" stroke="#e8e3f7" />
-        <text x={22} y={30.5} className="pjsc-t">Requests</text>
+        <text x={22} y={30.5} className="pjsc-t">
+          <Word id="requests" />
+        </text>
         {[72, 80, 88].map((x) => (
           <circle key={x} data-a="dot" cx={x} cy={27} r={3} fill="#22c3a6" />
         ))}
@@ -349,7 +358,7 @@ const ragChatbot: Scene = {
       <g data-a="badge">
         <rect x={262} y={16} width={86} height={22} rx={11} fill="#22c3a6" />
         <text x={305} y={30.5} textAnchor="middle" className="pjsc-t" fill="#fff">
-          +30% match
+          <Word id="match" />
         </text>
       </g>
     </>
@@ -386,8 +395,12 @@ const ragBenchmark: Scene = {
       <At p={up(m(3.38, 2.4, 2.36), 13)}>
         <path data-a="star" d="M0 -8 L2.3 -2.6 L8 -2.6 L3.4 1 L5.2 7 L0 3.4 L-5.2 7 L-3.4 1 L-8 -2.6 L-2.3 -2.6 Z" fill="#ffb02e" stroke="#e8920c" strokeWidth={1} />
       </At>
-      <text x={14} y={34} className="pjsc-t pjsc-t--big">20 LLMs</text>
-      <text x={14} y={48} className="pjsc-t pjsc-t--muted">6 parts measured</text>
+      <text x={14} y={34} className="pjsc-t pjsc-t--big">
+        <Word id="llms" />
+      </text>
+      <text x={14} y={48} className="pjsc-t pjsc-t--muted">
+        <Word id="parts" />
+      </text>
     </>
   ),
   play: (tl, q) => {
@@ -430,7 +443,7 @@ const energyAnomaly: Scene = {
         <path data-a="line" d="M266 68 C276 62 284 54 294 58 C302 61 308 64 316 62 L322 28 L328 63 C334 64 340 60 344 58" fill="none" stroke="#22c3a6" strokeWidth={2.2} strokeLinejoin="round" strokeLinecap="round" />
         <g data-a="tag">
           <text x={316} y={33} textAnchor="end" className="pjsc-t pjsc-t--s" fill="#ff4d6d">
-            3 a.m.
+            <Word id="night" />
           </text>
         </g>
         <circle data-a="spike" cx={322} cy={28} r={3.8} fill="#ff4d6d" stroke="#fff" strokeWidth={1.3} />
@@ -482,8 +495,8 @@ const battleCards: Scene = {
           </text>
         </g>
       </At>
-      <Tag p={[52, 30]} text="Brand A" color="#5b3fd6" w={58} />
-      <Tag p={[308, 30]} text="Brand B" color="#c47a06" w={58} />
+      <Tag p={[52, 30]} text={<Word id="brandA" />} color="#5b3fd6" w={58} />
+      <Tag p={[308, 30]} text={<Word id="brandB" />} color="#c47a06" w={58} />
       {[150, 180, 210].map((x) => (
         <At key={x} p={[x, 4]}>
           <path data-a="spark" opacity={0} d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#10a37f" />
@@ -596,7 +609,7 @@ const nebulous: Scene = {
       <g>
         <circle data-a="live" cx={20} cy={24} r={3.5} fill="#ff4d6d" />
         <text x={28} y={27.5} className="pjsc-t">
-          live
+          <Word id="live" />
         </text>
       </g>
     </>
@@ -854,13 +867,13 @@ const rbacApp: Scene = {
         </At>
       ))}
       <text x={14} y={30} className="pjsc-t">
-        Admin
+        <Word id="admin" />
       </text>
       <text x={14} y={42} className="pjsc-t">
-        Editor
+        <Word id="editor" />
       </text>
       <text x={14} y={54} className="pjsc-t">
-        Guest
+        <Word id="guest" />
       </text>
       <circle cx={52} cy={27} r={2.6} fill="#22c3a6" />
       <circle cx={52} cy={39} r={2.6} fill="#22c3a6" />
@@ -966,7 +979,7 @@ const leafIot: Scene = {
         <path d={`M${LF_GAUGE[0]} ${LF_GAUGE[1] + 5} v-9`} stroke="#d6f5df" strokeWidth={0.9} />
         <g data-a="ok">
           <text x={LF_GAUGE[0]} y={81} textAnchor="middle" className="pjsc-t pjsc-t--s" fill="#169c85">
-            Healthy
+            <Word id="healthy" />
           </text>
           <rect x={290} y={86} width={26} height={4} rx={2} fill="#d3f5ec" />
         </g>

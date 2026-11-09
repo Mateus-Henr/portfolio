@@ -9,6 +9,7 @@ import { embedUrl, totalHours } from '../format';
 import type { SiteConfig } from '../config';
 import { Pills, SectionHead, SeeMore, useGridColumns, type PillOption } from '../ui';
 import { TechGlyph, techColor } from '../tech';
+import { useLang, useT } from '../../i18n';
 
 const KINDS: (CertificateKind | 'all')[] = ['all', 'course', 'language', 'award'];
 const TONE: Record<CertificateKind, string> = {
@@ -22,6 +23,8 @@ export function Certificates({ config }: { config: SiteConfig }) {
   const look = config.certificates;
   const rows = config.certificateRows;
   const viewer = usePdfViewer();
+  const { lang } = useLang();
+  const t = useT();
   const [kind, setKind] = useState<CertificateKind | 'all'>('all');
   const [expanded, setExpanded] = useState(false);
   const grid = useRef<HTMLUListElement>(null);
@@ -31,7 +34,7 @@ export function Certificates({ config }: { config: SiteConfig }) {
 
   const options: PillOption[] = KINDS.map((k) => ({
     id: k,
-    label: CERT_META[k].label,
+    label: t.certificates.kinds[k],
     Icon: CERT_META[k].Icon,
     count: k === 'all' ? certs.length : certs.filter((c) => c.kind === k).length,
   }));
@@ -49,9 +52,9 @@ export function Certificates({ config }: { config: SiteConfig }) {
             ...config,
             labels: {
               ...config.labels,
-              certificates: {
-                intro: `${hours}+ hours of online courses, plus language certificates and awards. Open any certificate to see it.`,
-                ...config.labels?.certificates,
+              [lang]: {
+                ...config.labels?.[lang],
+                certificates: { intro: t.certificates.intro(hours), ...config.labels?.[lang]?.certificates },
               },
             },
           }}
@@ -64,7 +67,7 @@ export function Certificates({ config }: { config: SiteConfig }) {
               setKind(id as CertificateKind | 'all');
               setExpanded(false);
             }}
-            label="Filter certificates"
+            label={t.certificates.filter}
           />
         </div>
         <ul className="certs2__grid" ref={grid} key={kind}>
@@ -96,16 +99,16 @@ export function Certificates({ config }: { config: SiteConfig }) {
                         className="soft-btn"
                         onClick={() => viewer.open({ title: c.title, subtitle: `${c.issuer}${c.hours ? ` · ${c.hours}` : ''}`, src, href: c.file })}
                       >
-                        <FileText size={15} aria-hidden="true" /> View
+                        <FileText size={15} aria-hidden="true" /> {t.certificates.view}
                       </button>
                     ) : c.file ? (
                       <a className="soft-btn" href={c.file} target="_blank" rel="noreferrer">
-                        <ExternalLink size={15} aria-hidden="true" /> Open
+                        <ExternalLink size={15} aria-hidden="true" /> {t.certificates.open}
                       </a>
                     ) : (
                       c.course && (
                         <a className="soft-btn soft-btn--quiet" href={c.course} target="_blank" rel="noreferrer">
-                          <ExternalLink size={15} aria-hidden="true" /> Course
+                          <ExternalLink size={15} aria-hidden="true" /> {t.certificates.course}
                         </a>
                       )
                     )}

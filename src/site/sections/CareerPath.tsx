@@ -10,6 +10,7 @@ import { embedUrl, stepDates } from '../format';
 import type { CareerLayout, CareerLine, SiteConfig } from '../config';
 import { Chips, SectionHead } from '../ui';
 import { TechChips } from '../tech';
+import { useLang, useT } from '../../i18n';
 
 const TYPES: CareerType[] = ['study', 'work', 'research', 'milestone'];
 const RAIL_X = 41; // x of the rail in the single-column layout: centre of the step icons, px
@@ -192,6 +193,8 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   const hide = config.career.filter === 'hide';
   const steps = useMemo(() => (order === 'newest' ? [...portfolio.career].reverse() : portfolio.career), [order, portfolio]);
   const viewer = usePdfViewer();
+  const { lang } = useLang();
+  const t = useT();
 
   const [open, setOpen] = useState<Set<string>>(() => new Set(phone ? [] : [steps[0].id]));
   const [reached, setReached] = useState(0);
@@ -352,18 +355,18 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     pending.current = following.id;
   };
 
-  const counts = TYPES.map((t) => ({ t, n: steps.filter((s) => s.type === t).length }));
+  const counts = TYPES.map((type) => ({ type, n: steps.filter((s) => s.type === type).length }));
   const first = shown[0];
   const last = shown[shown.length - 1];
-  const startLabel = order === 'oldest' ? 'Start' : 'Today';
-  const endLabel = order === 'oldest' ? 'Today' : 'Where it began';
+  const startLabel = order === 'oldest' ? t.career.start : t.career.today;
+  const endLabel = order === 'oldest' ? t.career.today : t.career.began;
 
   return (
     <section id="career" className={cx('sec2', 'cp', `cp--${layout}`, `cp--line-${line}`, follow && 'cp--follow', phone && 'cp--minimal')}>
       <div className="wrap">
         <SectionHead id="career" config={config} />
 
-        <div className="cp__legend" role="group" aria-label={hide ? 'Show only one kind of step' : 'Highlight one kind of step'} data-reveal>
+        <div className="cp__legend" role="group" aria-label={hide ? t.career.filterHide : t.career.filterDim} data-reveal>
           {hide && (
             <button
               type="button"
@@ -373,20 +376,21 @@ export function CareerPath({ config }: { config: SiteConfig }) {
               onClick={() => pick(null)}
             >
               <Route size={15} strokeWidth={2.2} aria-hidden="true" />
-              All
+              {t.career.all}
               <span className="cp__key-n">{steps.length}</span>
             </button>
           )}
-          {counts.map(({ t, n }) => {
-            const { label, Icon } = CAREER_META[t];
+          {counts.map(({ type, n }) => {
+            const { Icon } = CAREER_META[type];
+            const label = t.career.types[type];
             return (
               <button
-                key={t}
+                key={type}
                 type="button"
-                className={cx('cp__key', focus === t && 'is-on')}
-                aria-pressed={focus === t}
-                style={{ '--tone': careerTone(t) } as CSSProperties}
-                onClick={() => pick(hide || focus !== t ? t : null)}
+                className={cx('cp__key', focus === type && 'is-on')}
+                aria-pressed={focus === type}
+                style={{ '--tone': careerTone(type) } as CSSProperties}
+                onClick={() => pick(hide || focus !== type ? type : null)}
               >
                 <Icon size={15} strokeWidth={2.2} aria-hidden="true" />
                 {label}
@@ -414,7 +418,8 @@ export function CareerPath({ config }: { config: SiteConfig }) {
             const pos = place(layout, step, i);
             const prev = i > 0 ? place(layout, shown[i - 1], i - 1) : null;
             const isOpen = open.has(step.id);
-            const { label, Icon } = CAREER_META[step.type];
+            const { Icon } = CAREER_META[step.type];
+            const label = t.career.types[step.type];
             const following = shown[i + 1];
             const index = steps.indexOf(step);
             const cert = step.certificate ? portfolio.certificates.find((c) => c.id === step.certificate) : undefined;
@@ -462,7 +467,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                             {step.role}
                           </span>
                           <span className="cp__org">{step.org}</span>
-                          <span className="cp__when">{stepDates(step)}</span>
+                          <span className="cp__when">{stepDates(step, lang)}</span>
                         </span>
                         <span className="cp__chev" aria-hidden="true">
                           <ChevronRight size={18} />
@@ -473,14 +478,14 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                         <Sticker Icon={Icon} tone={careerTone(step.type)} size={step.type === 'milestone' ? 'sm' : 'md'} />
                         <span className="cp__titles">
                           <span className="cp__when">
-                            {stepDates(step)} <span className="cp__type">· {label}</span>
+                            {stepDates(step, lang)} <span className="cp__type">· {label}</span>
                           </span>
                           <span className="cp__headline">{step.headline}</span>
                           <span className="cp__role">
                             {step.role} · {step.org}
                           </span>
                         </span>
-                        {!step.end && <span className="cp__now">Now</span>}
+                        {!step.end && <span className="cp__now">{t.career.now}</span>}
                         <ChevronDown className="cp__chev" size={20} aria-hidden="true" />
                       </>
                     )}
@@ -509,12 +514,12 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                               className="soft-btn"
                               onClick={() => viewer.open({ title: cert.title, subtitle: cert.issuer, src: certSrc, href: cert.file })}
                             >
-                              <FileText size={15} aria-hidden="true" /> View certificate
+                              <FileText size={15} aria-hidden="true" /> {t.career.viewCertificate}
                             </button>
                           ) : (
                             cert.file && (
                               <a className="soft-btn" href={cert.file} target="_blank" rel="noreferrer">
-                                <ExternalLink size={15} aria-hidden="true" /> Open certificate
+                                <ExternalLink size={15} aria-hidden="true" /> {t.career.openCertificate}
                               </a>
                             )
                           ))}
@@ -525,7 +530,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                           )}
                           {following && !follow && !phone && !(hide && focus) && (
                             <button type="button" className="cp__next" onClick={() => walk(index)}>
-                              Next step: {following.headline} <ArrowDown size={15} aria-hidden="true" />
+                              {t.career.nextStep}: {following.headline} <ArrowDown size={15} aria-hidden="true" />
                             </button>
                           )}
                         </div>
@@ -547,7 +552,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
               <ChevronsDown size={16} />
             </span>
             <span>
-              <strong>See more</strong> · {matching.length - shown.length} {order === 'newest' ? 'earlier' : 'later'} steps
+              <strong>{t.career.seeMore}</strong> · {order === 'newest' ? t.career.earlier(matching.length - shown.length) : t.career.later(matching.length - shown.length)}
             </span>
           </button>
         ) : (

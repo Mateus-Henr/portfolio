@@ -4,6 +4,7 @@ import { LogoMark } from '../Logo';
 import type { SiteConfig } from '../config';
 import { Chips, SectionHead, WindowBar } from '../ui';
 import { TechChips } from '../tech';
+import { useT } from '../../i18n';
 
 function Facts() {
   const portfolio = usePortfolio();
@@ -49,6 +50,7 @@ function Stats({ className }: { className?: string }) {
 
 export function About({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
+  const t = useT();
   const p = portfolio.profile;
   const look = config.about;
 
@@ -60,7 +62,7 @@ export function About({ config }: { config: SiteConfig }) {
         {look === 'bento' && (
           <div className="about2__bento">
             <div className="card about2__story" data-reveal>
-              {config.windowCards && <WindowBar title="about-me.md" />}
+              {config.windowCards && <WindowBar title={t.about.storyFile} />}
               <div className="about2__pad">
                 {p.summary.map((t, i) => (
                   <p key={i}>{t}</p>
@@ -69,7 +71,7 @@ export function About({ config }: { config: SiteConfig }) {
             </div>
             <Stats className="about2__stats" />
             <div className="card about2__facts" data-reveal>
-              {config.windowCards && <WindowBar title="quick-facts" />}
+              {config.windowCards && <WindowBar title={t.about.factsFile} />}
               <div className="about2__pad">
                 <Facts />
               </div>
@@ -86,7 +88,7 @@ export function About({ config }: { config: SiteConfig }) {
         {look === 'files' && (
           <div className="about2__files">
             <div className="card about2__story" data-reveal>
-              <WindowBar title="about-me.md" />
+              <WindowBar title={t.about.storyFile} />
               <div className="about2__pad">
                 {p.summary.map((t, i) => (
                   <p key={i}>{t}</p>
@@ -94,13 +96,13 @@ export function About({ config }: { config: SiteConfig }) {
               </div>
             </div>
             <div className="card about2__facts" data-reveal>
-              <WindowBar title="quick-facts" />
+              <WindowBar title={t.about.factsFile} />
               <div className="about2__pad">
                 <Facts />
               </div>
             </div>
             <div className="card about2__skills" data-reveal>
-              <WindowBar title="skills.md" />
+              <WindowBar title={t.about.skillsFile} />
               <div className="about2__pad">
                 <Skills icons={config.techIcons} />
               </div>

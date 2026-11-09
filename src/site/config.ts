@@ -2,6 +2,7 @@
 // fills one of these; the Page component turns it into the full site.
 
 import type { Portfolio } from '../content';
+import { STRINGS, type Lang } from '../i18n';
 
 export type SectionId = 'about' | 'career' | 'projects' | 'certificates' | 'contact';
 
@@ -35,8 +36,8 @@ export interface SiteConfig {
   heroAlign?: 'center' | 'left';
   /** Split hero only: put the animation on the left and the text on the right. */
   heroFlip?: boolean;
-  /** Small line above the greeting. */
-  eyebrow?: string;
+  /** Small line above the greeting, per language. */
+  eyebrow?: Partial<Record<Lang, string>>;
   about: AboutLook;
   career: {
     layout: CareerLayout;
@@ -78,7 +79,8 @@ export interface SiteConfig {
   sectionIcons?: 'sticker' | 'iso';
   /** Centre section titles and filter menus. */
   centered?: boolean;
-  labels?: Partial<Record<SectionId, SectionText>>;
+  /** Section texts that replace the defaults (src/i18n/strings.ts), per language. */
+  labels?: Partial<Record<Lang, Partial<Record<SectionId, SectionText>>>>;
   footer?: string;
   /** Footer with only "© year Name". */
   minimalFooter?: boolean;
@@ -86,28 +88,7 @@ export interface SiteConfig {
   content?: Portfolio;
 }
 
-export const DEFAULT_TEXT: Record<SectionId, Required<Omit<SectionText, 'intro'>> & { intro?: string }> = {
-  about: { eyebrow: 'About', title: 'A little about me', nav: 'About' },
-  career: {
-    eyebrow: 'Career path',
-    title: 'How I got here',
-    nav: 'Career',
-    intro: 'Follow the path from my first lines of code to today. Open any step to read more, or use “Next step” to walk through it.',
-  },
-  projects: {
-    eyebrow: 'Projects',
-    title: 'Things I have built',
-    nav: 'Projects',
-    intro: 'Pick an area to see the projects in it.',
-  },
-  certificates: {
-    eyebrow: 'Certificates',
-    title: 'Courses and awards',
-    nav: 'Certificates',
-  },
-  contact: { eyebrow: 'Contact', title: 'Get in touch', nav: 'Contact' },
-};
-
-export function sectionText(config: SiteConfig, id: SectionId) {
-  return { ...DEFAULT_TEXT[id], ...config.labels?.[id] };
+/** A section's eyebrow, title, intro and navigation label in one language. */
+export function sectionText(config: SiteConfig, id: SectionId, lang: Lang): SectionText & { eyebrow: string; title: string; nav: string } {
+  return { ...STRINGS[lang].sections[id], ...config.labels?.[lang]?.[id] };
 }

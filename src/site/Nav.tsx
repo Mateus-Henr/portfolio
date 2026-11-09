@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef, type MouseEvent } from 'react';
-import { MapPin } from 'lucide-react';
+import { Languages, MapPin } from 'lucide-react';
 import { usePortfolio } from './content';
 import { cx } from '../lib/env';
+import { useLang, useT } from '../i18n';
 import { useActiveSection, useScrolled } from '../lib/hooks';
 import { SECTION_ICON, SECTION_ICON_ALT, Sticker, sectionTone } from './icons';
 import { Logo, LogoMark } from './Logo';
@@ -19,11 +20,31 @@ const toTop = (event: MouseEvent<HTMLAnchorElement>) => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+/** Switches the whole page between English and Portuguese; it shows the language it changes to. */
+function LangSwitch() {
+  const { lang, setLang } = useLang();
+  const t = useT();
+  return (
+    <button
+      type="button"
+      className="navx__lang"
+      onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}
+      aria-label={t.lang.switch}
+      title={t.lang.switch}
+      lang={t.lang.otherHtmlLang}
+    >
+      <Languages className="navx__glyph" size={16} strokeWidth={2.1} aria-hidden="true" />
+      <span>{t.lang.other}</span>
+    </button>
+  );
+}
+
 function Brand({ floating, monogram, logo }: { floating?: boolean; monogram?: boolean; logo?: boolean }) {
   const portfolio = usePortfolio();
+  const t = useT();
   if (logo) {
     return (
-      <a className={cx('brand', 'brand--logo', floating && 'brand--float')} href="#top" onClick={toTop} aria-label={`${portfolio.profile.name}, back to top`}>
+      <a className={cx('brand', 'brand--logo', floating && 'brand--float')} href="#top" onClick={toTop} aria-label={t.nav.backToTop(portfolio.profile.name)}>
         <Logo name={portfolio.profile.name} size={34} />
       </a>
     );
@@ -42,6 +63,8 @@ function Brand({ floating, monogram, logo }: { floating?: boolean; monogram?: bo
 export function Nav({ config }: { config: SiteConfig }) {
   const active = useActiveSection(SECTION_ORDER);
   const scrolled = useScrolled(40);
+  const { lang } = useLang();
+  const t = useT();
   const list = useRef<HTMLUListElement>(null);
   const look = config.nav;
   const floatingBrand = look === 'dock' || look === 'rail';
@@ -59,13 +82,13 @@ export function Nav({ config }: { config: SiteConfig }) {
   return (
     <>
       {floatingBrand && <Brand floating monogram={config.brand === 'monogram'} logo={config.brand === 'logo'} />}
-      <nav className={cx('navx', `navx--${look}`, scrolled && 'is-scrolled', config.navMobileBottom && 'navx--mbottom')} aria-label="Sections">
+      <nav className={cx('navx', `navx--${look}`, scrolled && 'is-scrolled', config.navMobileBottom && 'navx--mbottom')} aria-label={t.nav.sections}>
         {!floatingBrand && <Brand monogram={config.brand === 'monogram'} logo={config.brand === 'logo'} />}
         <ul className="navx__list" ref={list}>
           {look === 'tabs' && <li className="navx__tab" aria-hidden="true" />}
           {SECTION_ORDER.map((id) => {
             const Icon = config.sectionIcons === 'iso' ? SECTION_ICON_ALT[id] : SECTION_ICON[id];
-            const text = sectionText(config, id).nav;
+            const text = sectionText(config, id, lang).nav;
             return (
               <li key={id}>
                 <a
@@ -85,6 +108,7 @@ export function Nav({ config }: { config: SiteConfig }) {
             );
           })}
         </ul>
+        <LangSwitch />
       </nav>
     </>
   );
@@ -94,6 +118,8 @@ export function Nav({ config }: { config: SiteConfig }) {
 export function Sidebar({ config }: { config: SiteConfig }) {
   const active = useActiveSection(SECTION_ORDER);
   const portfolio = usePortfolio();
+  const { lang } = useLang();
+  const t = useT();
   const p = portfolio.profile;
   return (
     <aside className="sidebar">
@@ -109,7 +135,7 @@ export function Sidebar({ config }: { config: SiteConfig }) {
       <p className="sidebar__where">
         <MapPin size={15} aria-hidden="true" /> {p.location}
       </p>
-      <nav aria-label="Sections">
+      <nav aria-label={t.nav.sections}>
         <ul className="sidebar__nav">
           {SECTION_ORDER.map((id) => {
             const Icon = SECTION_ICON[id];
@@ -122,7 +148,7 @@ export function Sidebar({ config }: { config: SiteConfig }) {
                   onClick={(event) => go(event, id)}
                 >
                   <Sticker Icon={Icon} tone={sectionTone(id)} size="xs" tilt={false} />
-                  {sectionText(config, id).nav}
+                  {sectionText(config, id, lang).nav}
                 </a>
               </li>
             );
@@ -130,6 +156,7 @@ export function Sidebar({ config }: { config: SiteConfig }) {
         </ul>
       </nav>
       <Socials look="list" className="sidebar__socials" />
+      <LangSwitch />
     </aside>
   );
 }

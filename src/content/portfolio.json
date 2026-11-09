@@ -168,7 +168,7 @@
       "type": "work",
       "headline": "First job: remote, and in English",
       "role": "Full-stack Developer",
-      "org": "Contract for a Boston team",
+      "org": "Freelance",
       "place": "Remote · Boston, USA",
       "start": "2020-09",
       "end": "2021-09",
@@ -267,7 +267,7 @@
       "type": "work",
       "headline": "Built a social network for exchange students",
       "role": "Full-stack Developer",
-      "org": "Contract for a Boston team",
+      "org": "Freelance",
       "place": "Remote · Boston, USA",
       "start": "2023-02",
       "end": "2023-06",
@@ -630,7 +630,7 @@
         "backend",
         "frontend"
       ],
-      "context": "Contract · Boston team",
+      "context": "Freelance",
       "year": "2020 – 2021",
       "summary": "A real-time chat web app with a Clojure and Spring Boot API and a React front end.",
       "stack": [
@@ -648,7 +648,7 @@
         "frontend",
         "backend"
       ],
-      "context": "Contract · Boston team",
+      "context": "Freelance",
       "year": "2023",
       "summary": "A social network where exchange students share information and learn together.",
       "highlight": "Whole app and database",
@@ -681,7 +681,7 @@
       "categories": [
         "frontend"
       ],
-      "context": "Contract · Boston team",
+      "context": "Freelance",
       "year": "2021",
       "summary": "A product landing page, hand-built with plain web technologies.",
       "stack": [
@@ -696,7 +696,7 @@
       "categories": [
         "backend"
       ],
-      "context": "Contract · Boston team",
+      "context": "Freelance",
       "year": "2021",
       "summary": "Fixes and maintenance on a Java role-based access control (RBAC) application.",
       "stack": [

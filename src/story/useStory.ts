@@ -1,4 +1,4 @@
-import { useRef, useState, type RefObject } from 'react';
+import { useCallback, useRef, useState, type RefObject } from 'react';
 import { gsap, useGSAP } from '../lib/motion';
 import { SHOTS, prefersReducedMotion } from '../lib/env';
 
@@ -12,8 +12,11 @@ export interface StoryKit {
   q: Query;
   /** L('sun') selects [data-layer="sun"]. */
   L: (name: string) => Element[];
-  /** Shows a caption from `at` seconds until the next one. */
-  say: (at: number, text: string) => void;
+  /**
+   * Shows a caption from `at` seconds until the next one. Pass a function to
+   * look the text up when it shows (it can change language meanwhile).
+   */
+  say: (at: number, text: string | (() => string)) => void;
   /** Registers a looping animation that plays in the background and pauses with the story. */
   loop: <T extends gsap.core.Animation>(animation: T) => T;
   /** Runs when the scene is removed. */
@@ -23,8 +26,10 @@ export interface StoryKit {
 
 interface Caption {
   at: number;
-  text: string;
+  text: string | (() => string);
 }
+
+const captionText = (caption: Caption) => (typeof caption.text === 'function' ? caption.text() : caption.text);
 
 declare global {
   interface Window {
@@ -44,7 +49,11 @@ export function useStory(
   { delay = 0.5 }: { delay?: number } = {},
 ) {
   const [state, setState] = useState<StoryState>('ready');
-  const api = useRef<{ toggle: () => void; replay: () => void }>({ toggle: () => {}, replay: () => {} });
+  const api = useRef<{ toggle: () => void; replay: () => void; refreshCaption: () => void }>({
+    toggle: () => {},
+    replay: () => {},
+    refreshCaption: () => {},
+  });
 
   useGSAP(
     () => {
@@ -86,9 +95,10 @@ export function useStory(
         shown = index;
         const node = parts.caption.current;
         if (!node) return;
-        node.textContent = index >= 0 ? captions[index].text : '';
+        const text = index >= 0 ? captionText(captions[index]) : '';
+        node.textContent = text;
         node.classList.remove('is-in');
-        if (index >= 0 && captions[index].text) {
+        if (text) {
           void node.offsetWidth;
           node.classList.add('is-in');
         }
@@ -138,6 +148,11 @@ export function useStory(
           setLoops(!offscreen);
           tl.restart();
           go('playing');
+        },
+        // shows the current caption again, e.g. in a new language
+        refreshCaption: () => {
+          shown = -2;
+          showCaption();
         },
       };
 
@@ -203,9 +218,12 @@ export function useStory(
     { scope: root },
   );
 
+  const refreshCaption = useCallback(() => api.current.refreshCaption(), []);
+
   return {
     state,
     toggle: () => api.current.toggle(),
     replay: () => api.current.replay(),
+    refreshCaption,
   };
 }

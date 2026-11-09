@@ -61,6 +61,7 @@ import {
   type SimpleIcon,
 } from 'simple-icons';
 import { cx } from '../lib/env';
+import { useT } from '../i18n';
 
 /*
   Brand icons for the tools named in portfolio.json, so people recognise a
@@ -124,22 +125,27 @@ const TECH: Record<string, Glyph> = {
   linux: brand(siLinux, '#1b1b1f'),
   tilaunchpad: generic(Cpu, '#cc0000'),
   embeddedsystems: generic(Cpu, '#cc0000'),
+  sistemasembarcados: generic(Cpu, '#cc0000'),
   blockchain: generic(Blocks, '#5b5f97'),
   architecture: generic(Network, '#6d4aff'),
+  arquitetura: generic(Network, '#6d4aff'),
   rbac: generic(ShieldCheck, '#13a37a'),
   webservices: generic(Globe, '#2f8cff'),
   designpatterns: generic(Shapes, '#f08c1a'),
+  padroesdeprojeto: generic(Shapes, '#f08c1a'),
   bpms: generic(Route, '#ff7a45'),
   // names as they appear in the skills list
   htmlcss: brand(siHtml5),
   clojurescriptfulcro: brand(siClojure),
   embeddedtilaunchpad: generic(Cpu, '#cc0000'),
+  embarcadostilaunchpad: generic(Cpu, '#cc0000'),
   openaiapi: generic(Sparkles, '#10a37f'),
   // ways of working
   scrum: generic(Repeat2, '#6d4aff'),
   kanban: generic(SquareKanban, '#2f8cff'),
   xp: generic(Users, '#22b573'),
   clientmeetings: generic(Handshake, '#f08c1a'),
+  reunioescomclientes: generic(Handshake, '#f08c1a'),
   // certificates
   verilog: generic(Cpu, '#7b5ea7'),
   english: generic(Languages, '#2f8cff'),
@@ -149,7 +155,13 @@ const TECH: Record<string, Glyph> = {
   web: generic(Globe, '#2f8cff'),
 };
 
-const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, '');
+// "Padrões de projeto" → "padroesdeprojeto": accents and spaces don't change the icon
+const key = (name: string) =>
+  name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
 
 /** Brand colour of a tool, for tinting things around its icon. */
 export const techColor = (name: string) => TECH[key(name)]?.color ?? '#8a8a99';
@@ -184,6 +196,7 @@ function MoreTools({ items }: { items: string[] }) {
   const [side, setSide] = useState<'left' | 'right'>('left');
   const root = useRef<HTMLLIElement>(null);
   const id = useId();
+  const t = useT();
 
   // a tap anywhere else, or Escape, closes it
   useEffect(() => {
@@ -217,7 +230,7 @@ function MoreTools({ items }: { items: string[] }) {
         className="tchip tchip--more"
         aria-expanded={open}
         aria-controls={id}
-        aria-label={`${items.length} more: ${items.join(', ')}`}
+        aria-label={t.more.tools(items.length, items.join(', '))}
         onClick={toggle}
       >
         +{items.length}

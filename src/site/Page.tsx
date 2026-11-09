@@ -2,7 +2,8 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { cx } from '../lib/env';
 import { useReveal } from '../lib/hooks';
 import { PdfViewerProvider } from '../components/pdf/PdfViewer';
-import { portfolio } from '../content';
+import { contentFor } from '../content';
+import { useLang } from '../i18n';
 import { ContentProvider } from './content';
 import type { SiteConfig } from './config';
 import { Hero } from './Hero';
@@ -24,6 +25,7 @@ import './styles/features.css';
  */
 export function Page({ config, scene }: { config: SiteConfig; scene: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
+  const { lang } = useLang();
   useReveal(root);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export function Page({ config, scene }: { config: SiteConfig; scene: ReactNode }
 
   return (
     <div ref={root} className={cx('site', config.theme, `shell--${config.shell}`, `nav--${config.nav}`, config.centered && 'site--centered')}>
-      <ContentProvider value={config.content ?? portfolio}>
+      <ContentProvider value={config.content ?? contentFor(lang)}>
       <PdfViewerProvider look="window">
         {config.shell === 'sidebar' ? <Sidebar config={config} /> : <Nav config={config} />}
         <div className="site__col">

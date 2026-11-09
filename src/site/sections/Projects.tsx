@@ -7,6 +7,7 @@ import type { SiteConfig } from '../config';
 import { Chips, Pills, SectionHead, SeeMore, WindowBar, useGridColumns, type PillOption } from '../ui';
 import { TechChips } from '../tech';
 import { ProjectScene } from '../projectScenes';
+import { useT } from '../../i18n';
 
 /**
  * Compact project cards with a rounded menu of areas on top. Picking an area
@@ -18,6 +19,7 @@ import { ProjectScene } from '../projectScenes';
  */
 export function Projects({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
+  const t = useT();
   const { look, columns = 3, rows, scenes } = config.projects;
   const [area, setArea] = useState('all');
   const [expanded, setExpanded] = useState(false);
@@ -25,7 +27,7 @@ export function Projects({ config }: { config: SiteConfig }) {
   const cols = useGridColumns(grid, area);
 
   const options: PillOption[] = [
-    { id: 'all', label: 'All', Icon: CATEGORY_ICON.all, count: portfolio.projects.length },
+    { id: 'all', label: t.projects.all, Icon: CATEGORY_ICON.all, count: portfolio.projects.length },
     ...portfolio.projectCategories.map((c) => ({
       id: c.id,
       label: c.label,
@@ -51,10 +53,10 @@ export function Projects({ config }: { config: SiteConfig }) {
       <div className="wrap">
         <SectionHead id="projects" config={config} />
         <div className="pjs__menu" data-reveal>
-          <Pills options={options} value={area} onChange={choose} label="Filter projects by area" />
+          <Pills options={options} value={area} onChange={choose} label={t.projects.filter} />
         </div>
         <p className="visually-hidden" aria-live="polite">
-          Showing {area === 'all' ? 'all projects' : `${label} projects`}
+          {area === 'all' ? t.projects.showingAll : t.projects.showingArea(label)}
         </p>
         {/* the key restarts the fade-in each time the area changes */}
         <ul className={cx('pjs__grid', `pjs__grid--${columns}`)} ref={grid} key={area}>

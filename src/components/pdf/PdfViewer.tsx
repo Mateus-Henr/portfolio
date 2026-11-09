@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ExternalLink, X } from 'lucide-react';
 import { cx } from '../../lib/env';
+import { useT } from '../../i18n';
 import './pdf.css';
 
 export interface PdfDocument {
@@ -25,6 +26,7 @@ export const usePdfViewer = () => useContext(PdfContext);
 export function PdfViewerProvider({ look = 'sheet', children }: { look?: PdfLook; children: ReactNode }) {
   const [doc, setDoc] = useState<PdfDocument | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const t = useT();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -44,7 +46,7 @@ export function PdfViewerProvider({ look = 'sheet', children }: { look?: PdfLook
       <dialog
         ref={dialogRef}
         className={cx('pdf', `pdf--${look}`)}
-        aria-label={doc?.title ?? 'Certificate'}
+        aria-label={doc?.title ?? t.pdf.certificate}
         onClose={() => {
           setDoc(null);
           document.documentElement.classList.remove('is-modal-open');
@@ -67,10 +69,10 @@ export function PdfViewerProvider({ look = 'sheet', children }: { look?: PdfLook
                 <p className="pdf__title">{doc.title}</p>
                 {doc.subtitle && <p className="pdf__subtitle">{doc.subtitle}</p>}
               </div>
-              <a className="pdf__btn" href={doc.href ?? doc.src} target="_blank" rel="noreferrer" aria-label="Open in a new tab">
+              <a className="pdf__btn" href={doc.href ?? doc.src} target="_blank" rel="noreferrer" aria-label={t.pdf.newTab}>
                 <ExternalLink size={17} />
               </a>
-              <button type="button" className="pdf__btn" onClick={close} aria-label="Close">
+              <button type="button" className="pdf__btn" onClick={close} aria-label={t.pdf.close}>
                 <X size={19} />
               </button>
             </header>

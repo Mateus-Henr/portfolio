@@ -1,6 +1,7 @@
-import { useLayoutEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { Pause, Play, RotateCcw } from 'lucide-react';
 import { cx } from '../lib/env';
+import { useT } from '../i18n';
 import { useStory, type StoryKit } from './useStory';
 import './story.css';
 
@@ -57,7 +58,11 @@ export function StoryStage({
   const canvas = useRef<HTMLDivElement>(null);
   const caption = useRef<HTMLParagraphElement>(null);
   const progress = useRef<HTMLDivElement>(null);
-  const { state, toggle, replay } = useStory(root, { caption, progress }, build, { delay });
+  const { state, toggle, replay, refreshCaption } = useStory(root, { caption, progress }, build, { delay });
+  const t = useT();
+
+  // captions are looked up when they show: after a language switch, show the current one again
+  useEffect(() => refreshCaption(), [t, refreshCaption]);
 
   useLayoutEffect(() => {
     const box = viewport.current;
@@ -78,10 +83,10 @@ export function StoryStage({
   // before the autoplay starts), play while it is paused, replay once it has ended.
   const action =
     state === 'ended'
-      ? { label: 'Replay animation', run: replay, icon: <RotateCcw size={12} strokeWidth={3} aria-hidden="true" /> }
+      ? { label: t.story.replay, run: replay, icon: <RotateCcw size={12} strokeWidth={3} aria-hidden="true" /> }
       : state === 'paused'
-        ? { label: 'Play animation', run: toggle, icon: <Play size={11} fill="currentColor" strokeWidth={0} aria-hidden="true" /> }
-        : { label: 'Pause animation', run: toggle, icon: <Pause size={11} fill="currentColor" strokeWidth={0} aria-hidden="true" /> };
+        ? { label: t.story.play, run: toggle, icon: <Play size={11} fill="currentColor" strokeWidth={0} aria-hidden="true" /> }
+        : { label: t.story.pause, run: toggle, icon: <Pause size={11} fill="currentColor" strokeWidth={0} aria-hidden="true" /> };
 
   return (
     <figure
