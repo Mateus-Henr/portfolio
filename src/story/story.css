@@ -175,21 +175,30 @@
 }
 
 .story__play {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: 0;
   border-radius: 50%;
   color: #fff;
   background: var(--story-accent);
-  box-shadow: 0 8px 18px -8px var(--story-accent), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 12px -6px var(--story-accent), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   transition: transform 0.2s ease;
 }
 
+/* a larger invisible area around the small button keeps it easy to tap */
+.story__play::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+}
+
 .story__play:hover {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 
 /* a soft ring pulses while the story plays */
@@ -199,7 +208,7 @@
 
 @keyframes story-pulse {
   50% {
-    box-shadow: 0 8px 18px -8px var(--story-accent), 0 0 0 7px color-mix(in oklab, var(--story-accent) 18%, transparent);
+    box-shadow: 0 6px 12px -6px var(--story-accent), 0 0 0 5px color-mix(in oklab, var(--story-accent) 18%, transparent);
   }
 }
 
@@ -335,10 +344,6 @@
     padding-bottom: 20px;
   }
 
-  .story__play {
-    width: 40px;
-    height: 40px;
-  }
 
   .story__caption {
     padding: 4px 10px 5px;

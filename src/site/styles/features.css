@@ -440,6 +440,7 @@
   }
 
   .hero2__socials {
+    display: flex;
     justify-content: center;
     margin-top: 18px;
     gap: 8px;
@@ -575,6 +576,13 @@
   }
 
   /* career path */
+
+  /* a step opens at once and the page below slides instead (CareerPath.tsx):
+     animating the height stutters on phones */
+  .cp__panel {
+    transition: none;
+  }
+
   .cp__head {
     gap: 12px;
     padding: 11px 14px 11px 20px;

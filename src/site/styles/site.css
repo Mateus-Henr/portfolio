@@ -834,6 +834,29 @@ html[data-nav='rail'] .hero2 {
   margin-top: 26px;
 }
 
+/* three links on the first row, Phone on a row of its own centred under LinkedIn
+   (phones lay them out with flexbox instead: see features.css) */
+.hero2__text {
+  container-type: inline-size;
+}
+
+.hero2__socials {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+}
+
+.hero2__socials .socials__item--phone {
+  grid-column: 2;
+  justify-self: center;
+}
+
+/* a column too narrow for three links (about 368px): two per row, and Phone still lands under LinkedIn */
+@container (max-width: 375px) {
+  .hero2__socials {
+    grid-template-columns: repeat(2, max-content);
+  }
+}
+
 .hero2__text--center .hero2__socials {
   justify-content: center;
 }

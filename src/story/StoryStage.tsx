@@ -78,10 +78,10 @@ export function StoryStage({
   // before the autoplay starts), play while it is paused, replay once it has ended.
   const action =
     state === 'ended'
-      ? { label: 'Replay animation', run: replay, icon: <RotateCcw size={17} strokeWidth={2.6} aria-hidden="true" /> }
+      ? { label: 'Replay animation', run: replay, icon: <RotateCcw size={12} strokeWidth={3} aria-hidden="true" /> }
       : state === 'paused'
-        ? { label: 'Play animation', run: toggle, icon: <Play size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" /> }
-        : { label: 'Pause animation', run: toggle, icon: <Pause size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" /> };
+        ? { label: 'Play animation', run: toggle, icon: <Play size={11} fill="currentColor" strokeWidth={0} aria-hidden="true" /> }
+        : { label: 'Pause animation', run: toggle, icon: <Pause size={11} fill="currentColor" strokeWidth={0} aria-hidden="true" /> };
 
   return (
     <figure

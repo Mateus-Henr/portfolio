@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperti
 import { ArrowDown, ChevronDown, ChevronsDown, ChevronsDownUp, ChevronsUpDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
 import type { CareerStep, CareerType } from '../../content';
 import { usePortfolio } from '../content';
-import { PHONE_WIDTH, cx } from '../../lib/env';
+import { PHONE_WIDTH, cx, prefersReducedMotion } from '../../lib/env';
 import { useMediaQuery } from '../../lib/hooks';
 import { usePdfViewer } from '../../components/pdf/PdfViewer';
 import { CAREER_META, Sticker, careerTone } from '../icons';
@@ -80,6 +80,83 @@ function Connector({
   );
 }
 
+const SLIDE = '340ms cubic-bezier(0.2, 0.8, 0.2, 1)';
+let slideRun = 0;
+let clipped: HTMLElement | null = null;
+const touched = new Set<HTMLElement>();
+
+/**
+ * Phones: a step opens or closes at once and everything under it slides into
+ * place. Only transforms move, which the phone's graphics chip handles without
+ * laying out and repainting the page every frame (a height animation stutters
+ * there). An opening card is uncovered by a clip that follows the slide, so it
+ * still looks like the card is growing.
+ */
+function slideBelow(step: HTMLElement, card: HTMLElement, dy: number, done: () => void) {
+  if (!dy) return;
+  const run = ++slideRun;
+  const section = step.closest('section');
+  const below: HTMLElement[] = [];
+  for (let el = step.nextElementSibling; el; el = el.nextElementSibling) below.push(el as HTMLElement);
+  const finish = section?.querySelector<HTMLElement>('.cp__cap--finish');
+  if (finish) below.push(finish);
+  for (let el = section?.nextElementSibling; el; el = el.nextElementSibling) below.push(el as HTMLElement);
+  const footer = document.querySelector<HTMLElement>('.foot2');
+  if (footer) below.push(footer);
+
+  if (clipped && clipped !== card) {
+    clipped.style.clipPath = '';
+    clipped.style.transition = '';
+  }
+  clipped = card;
+
+  // Read everything first. Each piece starts where it is on screen now (a
+  // slide still running included); only what crosses the screen slides,
+  // the rest just jumps to its place unseen.
+  const screen = window.innerHeight;
+  const plan = below.map((el) => {
+    const now = new DOMMatrixReadOnly(getComputedStyle(el).transform).m42;
+    const box = el.getBoundingClientRect();
+    const start = box.top - dy;
+    const end = box.top - now;
+    const seen = Math.min(start, end) < screen && Math.max(start, end) + box.height > 0;
+    return { el, from: now - dy, seen, now };
+  });
+  const movers = plan.filter((p) => p.seen).map((p) => p.el);
+  plan.forEach((p) => {
+    if (!p.seen && !p.now) return;
+    touched.add(p.el);
+    p.el.style.transition = 'none';
+    p.el.style.transform = p.seen ? `translateY(${p.from}px)` : '';
+  });
+  touched.add(card);
+  card.style.transition = 'none';
+  // the sides and top stay open so the card's shadow is never cut
+  if (dy > 0) card.style.clipPath = `inset(-40px -40px ${dy}px -40px)`;
+  void card.offsetWidth; // apply the start positions before sliding
+
+  movers.forEach((el) => {
+    el.style.transition = `transform ${SLIDE}`;
+    el.style.transform = '';
+  });
+  if (dy > 0) {
+    card.style.transition = `clip-path ${SLIDE}`;
+    card.style.clipPath = 'inset(-40px -40px 0px -40px)';
+  }
+  // once the last slide has finished, hand everything back to the stylesheet
+  const running = [card, ...movers].flatMap((el) => el.getAnimations()).map((a) => a.finished.catch(() => {}));
+  Promise.all(running).then(() => {
+    if (run !== slideRun) return;
+    touched.forEach((el) => {
+      el.style.transition = '';
+      el.style.clipPath = '';
+    });
+    touched.clear();
+    clipped = null;
+    done();
+  });
+}
+
 function starPath(cx: number, cy: number, r: number) {
   let d = '';
   for (let i = 0; i < 10; i++) {
@@ -113,11 +190,19 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   const list = useRef<HTMLOListElement>(null);
   const pending = useRef<string | null>(null);
   const firstNew = useRef<string | null>(null);
+  const sliding = useRef<{ id: string; height: number } | null>(null);
+  const refreshFollow = useRef(() => {});
 
   useLayoutEffect(() => {
     const el = list.current;
     if (!el) return;
-    const measure = () => setWidth(el.clientWidth);
+    // the list also changes height (a step opens): only a new width matters here
+    let last = -1;
+    const measure = () => {
+      if (el.clientWidth === last) return;
+      last = el.clientWidth;
+      setWidth(last);
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
@@ -171,6 +256,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
+    refreshFollow.current = onScroll;
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
@@ -195,6 +281,16 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     return () => window.clearTimeout(t);
   }, [open]);
 
+  // phones: the step has just opened or closed at once; slide the rest into place
+  useLayoutEffect(() => {
+    const s = sliding.current;
+    if (!s) return;
+    sliding.current = null;
+    const step = document.getElementById(`cp-${s.id}`);
+    const card = step?.querySelector<HTMLElement>('.cp__node');
+    if (step && card) slideBelow(step, card, card.offsetHeight - s.height, () => refreshFollow.current());
+  }, [open]);
+
   // after "See more" the button is gone: move focus to the first step that appeared
   useEffect(() => {
     const id = firstNew.current;
@@ -215,6 +311,9 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   };
 
   const toggle = (id: string, index: number) => {
+    // phones (no height animation there): note the card's height to slide from
+    const card = document.getElementById(`cp-${id}`)?.querySelector<HTMLElement>('.cp__node');
+    if (phone && card && !prefersReducedMotion()) sliding.current = { id, height: card.offsetHeight };
     setOpen((prev) => {
       const nextSet = new Set(prev);
       if (nextSet.has(id)) nextSet.delete(id);
