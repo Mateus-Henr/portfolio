@@ -3,6 +3,9 @@ const params = new URLSearchParams(window.location.search);
 /** `?shots` makes the page deterministic for the screenshot script. */
 export const SHOTS = params.has('shots');
 
+/** The phone layout: the same breakpoint as the phone styles in site/styles/features.css. */
+export const PHONE_WIDTH = '(max-width: 640px)';
+
 export const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

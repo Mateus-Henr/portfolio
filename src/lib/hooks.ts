@@ -18,6 +18,19 @@ export function useActiveSection(ids: readonly string[]) {
   return active;
 }
 
+/** True while a media query matches, e.g. useMediaQuery('(max-width: 640px)'). */
+export function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const list = window.matchMedia(query);
+    const onChange = () => setMatches(list.matches);
+    onChange();
+    list.addEventListener('change', onChange);
+    return () => list.removeEventListener('change', onChange);
+  }, [query]);
+  return matches;
+}
+
 /** True once the page has scrolled past `offset` pixels. */
 export function useScrolled(offset = 24) {
   const [scrolled, setScrolled] = useState(false);

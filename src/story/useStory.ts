@@ -35,7 +35,7 @@ declare global {
 /**
  * Builds the story timeline and plays it as soon as the page opens. It pauses
  * while the stage is scrolled out of view, and for visitors who prefer reduced
- * motion it shows the final frame and waits for them to press play.
+ * motion it shows the final frame and waits for them to press replay.
  */
 export function useStory(
   root: RefObject<HTMLElement | null>,
@@ -158,14 +158,14 @@ export function useStory(
         showCaption();
         go('ended');
       } else if (prefersReducedMotion()) {
-        // still frame: the visitor can press Replay to watch it
+        // still frame on the finished picture: the visitor can press replay to watch it
         tl.progress(1).pause();
         userPaused = true;
         setLoops(false);
         el.dataset.motion = 'reduced';
         showCaption();
         showProgress();
-        go('paused');
+        go('ended');
       } else {
         tl.progress(0);
         showCaption();

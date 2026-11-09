@@ -428,18 +428,31 @@
     font-size: 12px;
   }
 
+  /* the first screen is centred */
+  .hero2__text {
+    text-align: center;
+  }
+
   .hero2__sub {
     margin-top: 12px;
+    margin-inline: auto;
     font-size: 15.5px;
   }
 
   .hero2__socials {
+    justify-content: center;
     margin-top: 18px;
     gap: 8px;
   }
 
-  .hero2__socials .social,
-  .term__socials .social {
+  /* Phone gets a row of its own, centred under LinkedIn */
+  .hero2__socials .socials__item--phone {
+    display: flex;
+    flex-basis: 100%;
+    justify-content: center;
+  }
+
+  .hero2__socials .social {
     gap: 7px;
     padding: 6px 12px 6px 6px;
     font-size: 13px;
@@ -717,17 +730,40 @@
     font-size: 15px;
   }
 
-  .term__row {
-    margin: 6px 0;
-  }
-
   .btn2 {
     padding: 11px 18px;
     font-size: 14px;
   }
 
+  /* the email button, then "Copy email" and the links as round icons on one row */
+  .term__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 8px;
+    margin: 6px 0;
+  }
+
+  .term__links > .term__row {
+    display: contents;
+  }
+
   .term__socials {
     gap: 8px;
+  }
+
+  .term__socials .social {
+    padding: 4px;
+  }
+
+  /* the address stays for screen readers */
+  .term__socials .social__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   .foot2 {

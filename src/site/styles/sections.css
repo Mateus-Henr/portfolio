@@ -538,6 +538,12 @@
   margin: 10px 0;
 }
 
+/* the email buttons and the links: same spacing as the terminal's other lines */
+.term__links {
+  display: grid;
+  gap: 10px;
+}
+
 .term .ghost-btn {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);

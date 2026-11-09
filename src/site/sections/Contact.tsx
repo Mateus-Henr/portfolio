@@ -45,13 +45,17 @@ export function Contact({ config }: { config: SiteConfig }) {
                 <span className="term__prompt">$</span> cat contact.txt
               </p>
               <p className="term__out">{c.text}</p>
-              <div className="term__row">
-                <a className="btn2 btn2--primary" href={`mailto:${c.email}`}>
-                  <Send size={17} aria-hidden="true" /> {c.email}
-                </a>
-                <CopyEmail email={c.email} />
+              {/* on phones "Copy email" and the links share one row (see features.css) */}
+              <div className="term__links">
+                <div className="term__row">
+                  <a className="btn2 btn2--primary" href={`mailto:${c.email}`}>
+                    <Send size={17} aria-hidden="true" /> {c.email}
+                  </a>
+                  <CopyEmail email={c.email} />
+                </div>
+                {/* the email already has its own button above */}
+                <Socials look="pills" className="term__socials" spelled={look === 'terminal-light'} exclude={['email']} />
               </div>
-              <Socials look="pills" className="term__socials" spelled={look === 'terminal-light'} />
               <p>
                 <span className="term__prompt">$</span> <span className="term__cursor" />
               </p>
@@ -69,7 +73,7 @@ export function Contact({ config }: { config: SiteConfig }) {
                 </a>
                 <CopyEmail email={c.email} />
               </div>
-              <Socials look="pills" className="contact2__socials" />
+              <Socials look="pills" className="contact2__socials" exclude={['email']} />
             </div>
           </div>
         )}

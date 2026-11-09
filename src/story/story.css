@@ -166,103 +166,41 @@
   transform-origin: 0 50%;
 }
 
-/* ---------- toolbar under the frame ---------- */
+/* ---------- the button under the picture: pause, play or replay ---------- */
 .story__toolbar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 0 6px;
-  font-size: 14px;
+  justify-content: center;
+  /* close to the captions, which sit just above the picture's bottom edge */
+  margin-top: 2px;
 }
 
-.story__title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  color: var(--muted, #6e6e78);
-}
-
-.story__title strong {
-  color: var(--text, #111);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.story__logline {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.story__logline::before {
-  content: '·';
-  margin-right: 10px;
-  opacity: 0.6;
-}
-
-.story__badge {
-  flex: none;
+.story__play {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
   color: #fff;
   background: var(--story-accent);
-  box-shadow: 0 4px 10px -3px var(--story-accent);
+  box-shadow: 0 8px 18px -8px var(--story-accent), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform 0.2s ease;
 }
 
-.story[data-state='playing'] .story__badge {
+.story__play:hover {
+  transform: scale(1.06);
+}
+
+/* a soft ring pulses while the story plays */
+.story[data-state='playing'] .story__play {
   animation: story-pulse 1.6s ease-in-out infinite;
 }
 
 @keyframes story-pulse {
   50% {
-    box-shadow: 0 0 0 6px color-mix(in oklab, var(--story-accent) 18%, transparent);
+    box-shadow: 0 8px 18px -8px var(--story-accent), 0 0 0 7px color-mix(in oklab, var(--story-accent) 18%, transparent);
   }
-}
-
-.story__controls {
-  display: flex;
-  gap: 8px;
-  flex: none;
-}
-
-.story__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 38px;
-  padding: 0 15px 0 13px;
-  border: 0;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 650;
-  color: var(--text, #111);
-  background: var(--surface, #fff);
-  box-shadow: var(--shadow-1, 0 2px 8px rgba(0, 0, 0, 0.08)), inset 0 0 0 1px var(--line, rgba(0, 0, 0, 0.06));
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.story__btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-2, 0 6px 16px rgba(0, 0, 0, 0.12)), inset 0 0 0 1px var(--line, rgba(0, 0, 0, 0.06));
-}
-
-.story__btn--icon {
-  width: 38px;
-  padding: 0;
-  justify-content: center;
-}
-
-.story[data-state='ended'] .story__btn:not(.story__btn--icon),
-.story[data-motion='reduced'] .story__btn:not(.story__btn--icon) {
-  color: #fff;
-  background: var(--story-accent);
-  box-shadow: 0 10px 22px -10px var(--story-accent);
 }
 
 /* loops pause with the story and while the stage is off screen */
@@ -397,17 +335,9 @@
     padding-bottom: 20px;
   }
 
-  .story__toolbar {
-    margin-top: 12px;
-    padding: 0 2px;
-  }
-
-  .story__logline {
-    display: none;
-  }
-
-  .story__btn {
-    height: 36px;
+  .story__play {
+    width: 40px;
+    height: 40px;
   }
 
   .story__caption {

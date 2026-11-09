@@ -48,7 +48,7 @@ more", and so on) are in the `config` object in `src/App.tsx`.
 | `src/App.tsx` | Page layout options |
 | `src/scene/` | The opening animation and the colour theme |
 | `src/site/` | Navigation, sections, project-card animations, styles |
-| `src/story/` | Plays the opening animation (Pause / Replay, captions) |
+| `src/story/` | Plays the opening animation (one play / pause / replay button, captions) |
 | `src/site/assets/matt-face.png` | The logo picture |
 | `public/` | Favicon and icons |
 

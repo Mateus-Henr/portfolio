@@ -7,9 +7,9 @@ import './story.css';
 export type FrameLook = 'mat' | 'window' | 'bezel' | 'paper' | 'pixel' | 'glass' | 'bare';
 
 export interface StoryStageProps {
-  /** Episode title shown under the frame, e.g. "Hello, World". */
+  /** Episode title, e.g. "Hello, World" (read by screen readers, and shown in the window bar). */
   title: string;
-  /** One line about the story, shown next to the title. */
+  /** One line about the story, read by screen readers after the title. */
   logline?: string;
   /** Text read by screen readers instead of the animation. */
   label: string;
@@ -32,8 +32,9 @@ export interface StoryStageProps {
 
 /**
  * The framed animation: a 3D border on the white page (never full width),
- * a scaled drawing canvas, captions like film subtitles and a small control
- * bar with pause and replay. The story plays by itself when the page opens.
+ * a scaled drawing canvas, captions like film subtitles and one round button
+ * under them (pause, play or replay). The story plays by itself when the
+ * page opens.
  */
 export function StoryStage({
   title,
@@ -73,8 +74,14 @@ export function StoryStage({
     return () => ro.disconnect();
   }, [width]);
 
-  // "ready" is the half second before the autoplay starts
-  const playing = state === 'ready' || state === 'playing' || state === 'ended';
+  // One round button: pause while the story plays ("ready" is the half second
+  // before the autoplay starts), play while it is paused, replay once it has ended.
+  const action =
+    state === 'ended'
+      ? { label: 'Replay animation', run: replay, icon: <RotateCcw size={17} strokeWidth={2.6} aria-hidden="true" /> }
+      : state === 'paused'
+        ? { label: 'Play animation', run: toggle, icon: <Play size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" /> }
+        : { label: 'Pause animation', run: toggle, icon: <Pause size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" /> };
 
   return (
     <figure
@@ -113,27 +120,14 @@ export function StoryStage({
         </div>
       </div>
       <figcaption className="story__toolbar">
-        <span className="story__title">
-          <span className="story__badge" aria-hidden="true">
-            <Play size={11} fill="currentColor" strokeWidth={0} />
-          </span>
-          <strong>{title}</strong>
-          {logline && <span className="story__logline">{logline}</span>}
+        {/* the title is kept for screen readers only */}
+        <span className="visually-hidden">
+          {title}
+          {logline ? `: ${logline}` : ''}
         </span>
-        <span className="story__controls">
-          <button
-            type="button"
-            className="story__btn story__btn--icon"
-            onClick={toggle}
-            aria-label={playing ? 'Pause animation' : 'Play animation'}
-            title={playing ? 'Pause' : 'Play'}
-          >
-            {playing ? <Pause size={16} fill="currentColor" strokeWidth={0} /> : <Play size={16} fill="currentColor" strokeWidth={0} />}
-          </button>
-          <button type="button" className="story__btn" onClick={replay}>
-            <RotateCcw size={15} strokeWidth={2.4} aria-hidden="true" /> Replay
-          </button>
-        </span>
+        <button type="button" className="story__play" onClick={action.run} aria-label={action.label} title={action.label}>
+          {action.icon}
+        </button>
       </figcaption>
     </figure>
   );

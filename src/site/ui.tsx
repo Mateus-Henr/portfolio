@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import type { SocialKind } from '../content';
 import { usePortfolio } from './content';
 import { cx } from '../lib/env';
 import { SECTION_ICON, Sticker, SocialIcon, sectionTone } from './icons';
@@ -140,17 +141,21 @@ export function Socials({
   look = 'pills',
   className,
   spelled = false,
+  exclude,
 }: {
   look?: 'pills' | 'icons' | 'list';
   className?: string;
   /** Show the address itself (e.g. "github.com/Mateus-Henr") instead of the network name. */
   spelled?: boolean;
+  /** Links to leave out, e.g. the email where a bigger email button is already shown. */
+  exclude?: SocialKind[];
 }) {
   const portfolio = usePortfolio();
+  const links = exclude ? portfolio.socials.filter((s) => !exclude.includes(s.kind)) : portfolio.socials;
   return (
     <ul className={cx('socials', `socials--${look}`, className)}>
-      {portfolio.socials.map((s) => (
-        <li key={s.kind}>
+      {links.map((s) => (
+        <li key={s.kind} className={`socials__item socials__item--${s.kind}`}>
           <a
             className={cx('social', `social--${s.kind}`)}
             href={s.url}

@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { ArrowDown, ChevronDown, ChevronsDownUp, ChevronsUpDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
+import { ArrowDown, ChevronDown, ChevronsDown, ChevronsDownUp, ChevronsUpDown, ExternalLink, FileText, Flag, MapPin, Route } from 'lucide-react';
 import type { CareerStep, CareerType } from '../../content';
 import { usePortfolio } from '../content';
-import { cx } from '../../lib/env';
+import { PHONE_WIDTH, cx } from '../../lib/env';
+import { useMediaQuery } from '../../lib/hooks';
 import { usePdfViewer } from '../../components/pdf/PdfViewer';
 import { CAREER_META, Sticker, careerTone } from '../icons';
 import { embedUrl, stepDates } from '../format';
@@ -93,6 +94,7 @@ function starPath(cx: number, cy: number, r: number) {
  * The career path as a flowchart people can follow: steps are linked by a
  * winding path, every step opens like a dropdown (only the first starts
  * open), "Next step" walks along the path and lights it up as you go.
+ * On phones the path can stop after its first few steps, with "See more".
  */
 export function CareerPath({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();
@@ -106,8 +108,11 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   const [reached, setReached] = useState(0);
   const [focus, setFocus] = useState<CareerType | null>(null);
   const [width, setWidth] = useState(1000);
+  const [expanded, setExpanded] = useState(false);
+  const phone = useMediaQuery(PHONE_WIDTH);
   const list = useRef<HTMLOListElement>(null);
   const pending = useRef<string | null>(null);
+  const firstNew = useRef<string | null>(null);
 
   useLayoutEffect(() => {
     const el = list.current;
@@ -122,7 +127,11 @@ export function CareerPath({ config }: { config: SiteConfig }) {
   // narrow screens always use the single rail
   const layout: CareerLayout = width < 760 ? 'rail' : wanted;
   // with the "hide" filter, only the chosen kind of step stays on the path
-  const shown = hide && focus ? steps.filter((s) => s.type === focus) : steps;
+  const matching = hide && focus ? steps.filter((s) => s.type === focus) : steps;
+  // on phones only the first steps show until "See more" (it never hides a single step)
+  const limit = config.career.phoneSteps;
+  const cut = phone && limit !== undefined && !expanded && matching.length > limit + 1;
+  const shown = cut ? matching.slice(0, limit) : matching;
 
   // "scroll" mode: the light travels along the path with the page, and the step
   // under the reading line is highlighted. Attributes, not classes, so React
@@ -186,6 +195,25 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     return () => window.clearTimeout(t);
   }, [open]);
 
+  // after "See more" the button is gone: move focus to the first step that appeared
+  useEffect(() => {
+    const id = firstNew.current;
+    if (!id) return;
+    firstNew.current = null;
+    document.querySelector<HTMLElement>(`#cp-${id} .cp__head`)?.focus({ preventScroll: true });
+  }, [expanded]);
+
+  const showAll = () => {
+    firstNew.current = matching[shown.length]?.id ?? null;
+    setExpanded(true);
+  };
+
+  // a new filter starts short again, like the projects (dimming changes nothing on the path)
+  const pick = (type: CareerType | null) => {
+    setFocus(type);
+    if (hide) setExpanded(false);
+  };
+
   const toggle = (id: string, index: number) => {
     setOpen((prev) => {
       const nextSet = new Set(prev);
@@ -207,6 +235,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
       return nextSet;
     });
     setReached((r) => Math.max(r, index + 1));
+    if (limit !== undefined && index + 1 >= limit) setExpanded(true);
     pending.current = following.id;
   };
 
@@ -216,6 +245,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
     else {
       setOpen(new Set(steps.map((s) => s.id)));
       setReached(steps.length - 1);
+      setExpanded(true);
     }
   };
 
@@ -246,7 +276,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
               className={cx('cp__key', !focus && 'is-on')}
               aria-pressed={!focus}
               style={{ '--tone': 'var(--accent)' } as CSSProperties}
-              onClick={() => setFocus(null)}
+              onClick={() => pick(null)}
             >
               <Route size={15} strokeWidth={2.2} aria-hidden="true" />
               All
@@ -262,7 +292,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                 className={cx('cp__key', focus === t && 'is-on')}
                 aria-pressed={focus === t}
                 style={{ '--tone': careerTone(t) } as CSSProperties}
-                onClick={() => setFocus((f) => (hide ? t : f === t ? null : t))}
+                onClick={() => pick(hide || focus !== t ? t : null)}
               >
                 <Icon size={15} strokeWidth={2.2} aria-hidden="true" />
                 {label}
@@ -389,6 +419,20 @@ export function CareerPath({ config }: { config: SiteConfig }) {
         </ol>
 
         <div className="cp__cap cp__cap--finish" style={{ '--x': `${place(layout, last, steps.length - 1).x * 100}%` } as CSSProperties} data-reveal>
+        {cut ? (
+          // a shortened path (phones) ends in "See more", where the rest of it continues
+          <button type="button" className="cp__end cp__more" onClick={showAll}>
+            <span className="cp__flag" aria-hidden="true">
+              <ChevronsDown size={16} />
+            </span>
+            <span>
+              <strong>See more</strong> ·{' '}
+              {order === 'newest'
+                ? `${matching.length - shown.length} earlier steps, back to ${matching[matching.length - 1].start.slice(0, 4)}`
+                : `${matching.length - shown.length} more steps, up to today`}
+            </span>
+          </button>
+        ) : (
         <div className={cx('cp__end', 'cp__end--finish', reached >= steps.length - 1 && 'is-lit')}>
           <span className="cp__flag" aria-hidden="true">
             {order === 'oldest' ? <MapPin size={16} /> : <Flag size={16} />}
@@ -397,6 +441,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
             <strong>{endLabel}</strong> · {last.role} · {last.org}
           </span>
         </div>
+        )}
         </div>
       </div>
     </section>

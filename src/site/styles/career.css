@@ -61,6 +61,20 @@
   color: var(--text);
 }
 
+/* "See more" at the end of a shortened path (phones): a marker you can press */
+.cp__more {
+  text-align: left;
+  transition: box-shadow 0.2s ease;
+}
+
+.cp__more:hover {
+  box-shadow: var(--shadow-2);
+}
+
+.cp__more .cp__flag {
+  background: var(--accent);
+}
+
 .cp__flag {
   display: grid;
   place-items: center;

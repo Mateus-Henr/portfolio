@@ -50,6 +50,8 @@ export interface SiteConfig {
     follow?: 'button' | 'scroll';
     /** What the Study / Work / Research / Milestone filters do to the other steps. */
     filter?: 'dim' | 'hide';
+    /** On phones, how many steps show before "See more" (all of them when left out). */
+    phoneSteps?: number;
   };
   projects: {
     look: ProjectsLook;
