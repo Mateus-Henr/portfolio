@@ -56,7 +56,7 @@ export interface SiteConfig {
     columns?: 3 | 4;
     /** Rows shown before "See more" (all rows when left out). */
     rows?: number;
-    /** A small animation on each card that plays while the cursor is over it. */
+    /** A small animation on each card that plays while the cursor is over it (on phones, as it scrolls into view). */
     scenes?: boolean;
   };
   certificates: CertificatesLook;

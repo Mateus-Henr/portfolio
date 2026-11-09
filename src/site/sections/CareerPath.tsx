@@ -307,7 +307,7 @@ export function CareerPath({ config }: { config: SiteConfig }) {
                     x1={x1}
                     x2={x2}
                     width={width}
-                    height={layout === 'rail' ? 40 : 64}
+                    height={layout === 'rail' ? 30 : 64}
                     line={line}
                     lit={i <= reached}
                     next={!follow && i === reached + 1}

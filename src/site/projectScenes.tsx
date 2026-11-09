@@ -1,13 +1,14 @@
 import { useRef, type ReactNode, type SVGProps } from 'react';
 import { gsap, useGSAP } from '../lib/motion';
-import { prefersReducedMotion } from '../lib/env';
+import { SHOTS, isPhone, prefersReducedMotion } from '../lib/env';
 
 /*
   One small isometric scene per project, drawn like the opening city.
   The card shows the finished scene. While the cursor is over the card the
-  scene plays its little story (on touch screens, a tap plays it). Every
-  story clears part of the drawing first and ends exactly on the finished
-  picture drawn here, which is also the resting frame.
+  scene plays its little story (on touch screens, a tap plays it; on phones
+  it also plays once as the card scrolls into view). Every story clears part
+  of the drawing first and ends exactly on the finished picture drawn here,
+  which is also the resting frame.
 */
 
 // ---------- tiny isometric kit ----------
@@ -1178,36 +1179,63 @@ export function ProjectScene({ id }: { id: string }) {
       if (!card || prefersReducedMotion()) return;
 
       let settle: gsap.core.Tween | null = null;
-      const start = () => {
+      let wait: gsap.core.Tween | null = null;
+      // `loop`: hover and tap keep the story going; scrolling into view (phones) plays it once
+      const start = (loop = true) => {
         settle?.kill();
+        wait?.kill();
         el.setAttribute('data-playing', '');
-        tl.restart();
+        tl.repeat(loop ? -1 : 0).restart();
       };
       // when the cursor leaves, the story quickly finishes and stays on its last frame
       const stop = () => {
+        wait?.kill();
         el.removeAttribute('data-playing');
         tl.pause();
         settle = gsap.to(tl, { progress: 1, duration: 0.4, ease: 'power1.out' });
       };
+      tl.eventCallback('onComplete', () => el.removeAttribute('data-playing'));
       const hover = window.matchMedia('(hover: hover)').matches;
+      const enter = () => start();
       const tap = () => (el.hasAttribute('data-playing') ? stop() : start());
       if (hover) {
-        card.addEventListener('pointerenter', start);
+        card.addEventListener('pointerenter', enter);
         card.addEventListener('pointerleave', stop);
       } else {
         el.addEventListener('click', tap);
       }
-      // never keep playing off screen
-      const io = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting && el.hasAttribute('data-playing')) stop();
-      });
+      // On phones the story also plays once as the card scrolls into view, and
+      // again each time it comes back. On every screen it stops off screen.
+      const playOnScroll = !SHOTS && isPhone();
+      let seen = false;
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) {
+            seen = false;
+            if (el.hasAttribute('data-playing')) stop();
+            else wait?.kill();
+            return;
+          }
+          if (!playOnScroll || seen || entry.intersectionRatio < 0.6) return;
+          seen = true;
+          if (el.hasAttribute('data-playing')) return;
+          // cards side by side (a phone held sideways) start one after the other
+          const row = card.parentElement?.getBoundingClientRect().left ?? 0;
+          const box = card.getBoundingClientRect();
+          const column = Math.max(0, Math.round((box.left - row) / Math.max(1, box.width)));
+          wait = gsap.delayedCall(0.15 + column * 0.3, () => start(false));
+        },
+        // the bottom strip is left out: the phone navigation sits there
+        { threshold: [0, 0.6], rootMargin: '0px 0px -12% 0px' },
+      );
       io.observe(el);
       return () => {
-        card.removeEventListener('pointerenter', start);
+        card.removeEventListener('pointerenter', enter);
         card.removeEventListener('pointerleave', stop);
         el.removeEventListener('click', tap);
         io.disconnect();
         settle?.kill();
+        wait?.kill();
       };
     },
     { scope: ref },

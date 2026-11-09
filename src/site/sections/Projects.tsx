@@ -13,7 +13,8 @@ import { ProjectScene } from '../projectScenes';
  * shows only its projects; the cards fade in, in place (nothing is taken out
  * of the page flow, so the next section never jumps over them). Optionally
  * only the first rows show until "See more", and each card can carry a small
- * animation that plays while the cursor is over it.
+ * animation that plays while the cursor is over it (on phones, as it scrolls
+ * into view).
  */
 export function Projects({ config }: { config: SiteConfig }) {
   const portfolio = usePortfolio();

@@ -88,11 +88,14 @@
         ]
       },
       {
-        "group": "Systems & tools",
+        "group": "Cloud & systems",
         "items": [
-          "C",
-          "Linux",
+          "AWS",
+          "Google Cloud Run",
           "Docker",
+          "CI/CD",
+          "Linux",
+          "C",
           "Keycloak",
           "Azure AD",
           "Embedded (TI LaunchPad)"
@@ -169,7 +172,7 @@
       "place": "Remote · Boston, USA",
       "start": "2020-09",
       "end": "2021-09",
-      "story": "Joined a team in Boston from Brazil: meetings, emails and Scrum sprints, all in English.",
+      "story": "Joined a distributed team in Boston from Brazil, leading meetings and working in Scrum sprints, all in English.",
       "points": [
         "Wrote Clojure code for Nebulous, a real-time chat app, and maintained its Spring Boot API",
         "Updated the React front end",
@@ -241,7 +244,7 @@
       "end": "2024-01",
       "story": "Looked for unusual patterns in years of campus electricity data, to stop waste early and help the campus manage its energy better.",
       "points": [
-        "Anomaly detection on the campus's historical meter data, inspired by LSTM research from Australia",
+        "Built LSTM deep-learning models that detect anomalies in the campus's historical meter data, inspired by research from Australia",
         "Turned the unusual patterns it found into proposals to cut costs and environmental impact",
         "Mapped where to place microcontrollers for real-time monitoring",
         "Presented the project at an exhibition in Vitória (ES)"
@@ -272,7 +275,7 @@
       "points": [
         "Built the whole app with the Fulcro framework and Datomic",
         "Designed the database structure and its connection",
-        "Fixed bugs and added features to an access-control system in Java, with Spring, JPA and Hibernate, keeping it secure"
+        "Fixed critical security bugs and added features in a Java access-control system (Spring, JPA, Hibernate), making sign-in safer against unauthorized access"
       ],
       "tools": [
         "ClojureScript",
@@ -295,12 +298,15 @@
       "end": "2025-07",
       "story": "Tested each part of a Retrieval-Augmented Generation pipeline to see what really helps an LLM answer accurately from a company’s own documents. It became my thesis.",
       "points": [
-        "Compared PDF readers, embedding models, chunk sizes, top-k, search methods and prompt templates",
-        "Benchmarked 20 LLMs and how long each takes to answer"
+        "Built a hybrid-search RAG pipeline (BM25 + dense retrieval + reranking) with Haystack and Weaviate, tested on 100 questions",
+        "Compared 3 PDF parsers, 4 embedding models, chunk sizes, top-k, search methods and prompt templates",
+        "Benchmarked 20 open-source LLMs (up to 14B parameters) on an NVIDIA A100 GPU, including how long each takes to answer",
+        "Qwen2.5-14B and OpenHermes-2.5-Mistral-7B beat GPT-4-Turbo on BERTScore"
       ],
       "tools": [
         "Python",
         "Haystack",
+        "Weaviate",
         "PyTorch",
         "scikit-learn",
         "Pandas",
@@ -316,15 +322,19 @@
       "place": "Remote · Los Angeles, USA",
       "start": "2024-06",
       "end": "2024-12",
-      "story": "A chatbot that answers employees' questions using the company's own documents.",
+      "story": "A chatbot that answers employees' questions using the company's own documents, built on what my thesis research found.",
       "points": [
         "Rebuilt the whole RAG pipeline: tested PDF readers and adopted PyMuPDF",
+        "A PDF-to-embeddings ingestion pipeline that reduced hallucinations",
         "Asked each question in several ways to widen the search: 30% better document matching",
-        "Designed the Weaviate database in the cloud and used GPT-4o from retrieval to the final answer"
+        "Designed the Weaviate database in the cloud and used OpenAI (GPT-4o) and DeepSeek models through LangChain, from retrieval to the final answer",
+        "Deployed the full-stack app on AWS in Docker containers, with Redis semantic caching and PostgreSQL"
       ],
       "tools": [
         "Python",
         "LangChain",
+        "OpenAI",
+        "AWS",
         "Flask",
         "React",
         "TypeScript",
@@ -383,8 +393,9 @@
       "place": "São Paulo, Brazil",
       "start": "2025-01",
       "end": "2025-02",
-      "story": "MikoChain: an app that tracks goods along the whole supply chain, secured by blockchain.",
+      "story": "MikoChain: an app that traces food along the whole supply chain, secured by blockchain.",
       "points": [
+        "National semifinalist in Campus Mobile, a competition run by Instituto Claro",
         "Built the MVP with Node.js and React",
         "Pitched at the on-site semifinal at USP, with teams from every region of Brazil"
       ],
@@ -420,16 +431,20 @@
       "place": "Remote · Los Angeles, USA",
       "start": "2025-05",
       "end": "2026-08",
-      "story": "An iOS app that saves links from any platform into collections, with a nice preview of each one.",
+      "story": "An iOS app, now in production, that saves links from any platform into collections, with a nice preview of each one.",
       "points": [
-        "Designed the backend from scratch",
-        "Middlewares, schema validation, API routes, error handling and database design",
-        "Firebase for sign-in, permissions and data"
+        "Designed and delivered the whole backend from scratch: sign-in, permissions and scalable file storage",
+        "A secure REST API in TypeScript with role-based access control (RBAC) and auditable permission changes",
+        "Middlewares, schema validation, API routes, error handling, and Firestore schemas designed for fast reads",
+        "Automatic deploys to Google Cloud Run: a CI/CD pipeline runs on every commit pushed to GitHub"
       ],
       "tools": [
         "Node.js",
         "Express",
-        "Firebase"
+        "TypeScript",
+        "Firebase",
+        "Google Cloud Run",
+        "CI/CD"
       ]
     },
     {
@@ -441,7 +456,7 @@
       "place": "Florestal, Brazil",
       "start": "2025-07",
       "end": "2025-07",
-      "story": "Finished the degree, with the RAG benchmark as my final thesis.",
+      "story": "Finished the degree, with the RAG benchmark as my final thesis: “Building a Sales Strategy Assistant Utilizing RAG and LLMs”.",
       "points": [],
       "tools": []
     },
@@ -453,14 +468,18 @@
       "org": "LEVTY",
       "place": "Remote · Belo Horizonte, Brazil",
       "start": "2025-05",
-      "story": "Helping build a platform that a city hall uses to manage requests from its citizens.",
+      "story": "Helping build the digital services a city hall uses to manage requests from its citizens.",
       "points": [
-        "Designing the architecture from scratch: access control (RBAC), UI and web services, with design patterns",
-        "Meeting the client on site to gather requirements"
+        "Designing the architecture from scratch: role-based access control (RBAC) across departments, UI and web services, with design patterns",
+        "Designing BPMS processes, including a dispatcher that routes each citizen request to the right department",
+        "Building reusable React components for an Electronic Document Management (GED) system, covering each document's lifecycle",
+        "Leading requirements meetings with the client, including on site, and turning them into technical specifications"
       ],
       "tools": [
         "Architecture",
         "RBAC",
+        "BPMS",
+        "React",
         "Web services",
         "Design patterns"
       ]
@@ -498,11 +517,13 @@
       ],
       "context": "LEVTY",
       "year": "2025 – now",
-      "summary": "A platform a city hall uses to receive and manage requests from citizens.",
+      "summary": "A platform a city hall uses to receive citizen requests and route them to the right department.",
       "highlight": "Architecture designed from scratch",
       "stack": [
         "Architecture",
         "RBAC",
+        "BPMS",
+        "React",
         "Web services",
         "Design patterns"
       ]
@@ -522,10 +543,11 @@
         "Python",
         "LangChain",
         "Weaviate",
-        "Flask",
-        "React",
+        "AWS",
+        "Docker",
         "Redis",
-        "Docker"
+        "Flask",
+        "React"
       ]
     },
     {
@@ -536,11 +558,12 @@
       ],
       "context": "UFV · Final thesis",
       "year": "2024 – 2025",
-      "summary": "Measured how PDF readers, embeddings, chunk size, top-k, search and prompts change answer quality.",
-      "highlight": "20 LLMs compared",
+      "summary": "Measured how PDF parsers, embeddings, chunk size, top-k, hybrid search and prompts change answer quality, across 20 LLMs.",
+      "highlight": "Open LLMs beat GPT-4-Turbo on BERTScore",
       "stack": [
         "Python",
         "Haystack",
+        "Weaviate",
         "PyTorch",
         "Google Colab"
       ]
@@ -553,7 +576,7 @@
       ],
       "context": "UFV · Research",
       "year": "2023",
-      "summary": "Finds unusual electricity use in years of campus meter data, to prevent waste.",
+      "summary": "LSTM models that find unusual electricity use in years of campus meter data, to prevent waste.",
       "highlight": "Presented in Vitória (ES)",
       "stack": [
         "Python",
@@ -591,10 +614,13 @@
       "context": "Freelance",
       "year": "2025 – 2026",
       "summary": "Backend for an iOS app that saves links into collections, with rich previews.",
+      "highlight": "Live in production",
       "stack": [
         "Node.js",
+        "TypeScript",
         "Express",
-        "Firebase"
+        "Firebase",
+        "Google Cloud Run"
       ]
     },
     {
@@ -640,8 +666,8 @@
       ],
       "context": "Campus Mobile",
       "year": "2025",
-      "summary": "Tracks goods along the supply chain, secured by blockchain.",
-      "highlight": "Semifinalist",
+      "summary": "Traces food along the whole supply chain, secured by blockchain.",
+      "highlight": "National semifinalist",
       "stack": [
         "Node.js",
         "React",
@@ -837,6 +863,13 @@
       "file": "https://drive.google.com/file/d/1HYsErt_GsZCe04B9UxCXiVv9em8uvv6Q/view?usp=sharing"
     },
     {
+      "id": "java-backend-dio",
+      "kind": "course",
+      "tech": "Java",
+      "title": "Java Backend Bootcamp",
+      "issuer": "Santander · DIO"
+    },
+    {
       "id": "english-c2",
       "kind": "language",
       "tech": "English",
@@ -869,6 +902,14 @@
       "issuer": "Campus Mobile · LSITEC",
       "year": "2025",
       "file": "https://easycertificates.lsitec.org.br/certificate/4e3ea623-ccdc-450f-86ab-1811d86375c7/"
+    },
+    {
+      "id": "sebrae-fator-s",
+      "kind": "award",
+      "tech": "Award",
+      "title": "SEBRAE Fator S · Gold Medal",
+      "issuer": "University community web app",
+      "year": "2024"
     },
     {
       "id": "ifes",
