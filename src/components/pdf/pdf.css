@@ -1,0 +1,141 @@
+html.is-modal-open {
+  overflow: hidden;
+}
+
+.pdf {
+  width: min(960px, calc(100vw - 32px));
+  height: min(760px, calc(100svh - 48px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.pdf::backdrop {
+  background: rgba(14, 14, 24, 0.38);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.pdf[open] .pdf__panel {
+  animation: pdf-in 0.38s cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+
+@keyframes pdf-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+}
+
+.pdf__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--pdf-radius, 22px);
+  background: var(--pdf-bg, #fff);
+  color: var(--text, #111);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 24px 48px rgba(0, 0, 0, 0.16), 0 60px 120px rgba(0, 0, 0, 0.18);
+}
+
+.pdf__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 12px 22px;
+  border-bottom: 1px solid var(--line, rgba(0, 0, 0, 0.08));
+  background: var(--pdf-bar, #fff);
+}
+
+.pdf__heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf__title {
+  font-weight: 650;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf__subtitle {
+  font-size: 13px;
+  color: var(--muted, #666);
+}
+
+.pdf__btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2, #f2f2f5);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.pdf__btn:hover {
+  background: color-mix(in oklab, var(--surface-2, #f2f2f5) 80%, black);
+}
+
+.pdf__frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #e9e9ee;
+}
+
+/* macOS-style window */
+.pdf--window .pdf__panel {
+  --pdf-radius: 14px;
+}
+
+.pdf--window .pdf__bar {
+  padding-left: 14px;
+  background: linear-gradient(#f7f7f9, #ececf0);
+}
+
+.pdf--window .pdf__heading {
+  text-align: center;
+}
+
+.pdf__lights {
+  display: flex;
+  gap: 8px;
+}
+
+.pdf__light {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  display: block;
+}
+
+.pdf__light--red {
+  background: #ff5f57;
+}
+.pdf__light--amber {
+  background: #febc2e;
+}
+.pdf__light--green {
+  background: #28c840;
+}
+
+/* ticket look */
+.pdf--ticket .pdf__panel {
+  --pdf-radius: 10px;
+}
+
+.pdf--ticket .pdf__bar {
+  border-bottom: 2px dashed color-mix(in oklab, var(--accent, #000) 35%, transparent);
+}

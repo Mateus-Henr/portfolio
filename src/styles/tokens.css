@@ -1,0 +1,56 @@
+/*
+  Default design tokens. Every design version overrides these on its root
+  element (see designs/vNN-name/theme.css). Shadows follow one rule: several
+  thin, slightly tinted layers from one light source above the page.
+*/
+.design {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f5f5f7;
+  --text: #111114;
+  --muted: #6e6e78;
+  --line: rgba(17, 17, 20, 0.08);
+
+  --accent: #0a84ff;
+  --accent-2: #ff375f;
+  --accent-3: #ffd60a;
+  --on-accent: #ffffff;
+
+  /* one colour per section, used by icons and small details */
+  --sec-about: #0a84ff;
+  --sec-experience: #ff9f0a;
+  --sec-projects: #bf5af2;
+  --sec-education: #30d158;
+  --sec-certificates: #ff375f;
+  --sec-contact: #5ac8fa;
+
+  --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --display-weight: 700;
+  --display-tracking: -0.035em;
+  --display-leading: 1;
+
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 32px;
+
+  /* hue saturation lightness of the shadow tint */
+  --shadow-color: 230 25% 20%;
+  --shadow-1: 0 1px 1px hsl(var(--shadow-color) / 0.05), 0 2px 4px hsl(var(--shadow-color) / 0.05),
+    0 6px 12px hsl(var(--shadow-color) / 0.05);
+  --shadow-2: 0 1px 1px hsl(var(--shadow-color) / 0.04), 0 3px 6px hsl(var(--shadow-color) / 0.05),
+    0 10px 20px hsl(var(--shadow-color) / 0.06), 0 22px 44px hsl(var(--shadow-color) / 0.07);
+  --shadow-3: 0 2px 2px hsl(var(--shadow-color) / 0.04), 0 8px 16px hsl(var(--shadow-color) / 0.05),
+    0 20px 40px hsl(var(--shadow-color) / 0.07), 0 40px 80px hsl(var(--shadow-color) / 0.09),
+    0 70px 120px hsl(var(--shadow-color) / 0.08);
+
+  --maxw: 1120px;
+  --gutter: clamp(20px, 5vw, 48px);
+  --section-pad: clamp(96px, 12vw, 168px);
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}

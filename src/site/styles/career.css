@@ -1,0 +1,521 @@
+/* ---------- career path (flowchart) ---------- */
+.cp__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.cp__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px 8px 11px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 650;
+  color: color-mix(in oklab, var(--tone) 75%, black);
+  background: color-mix(in oklab, var(--tone) 11%, white);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.cp__key:hover {
+  transform: translateY(-1px);
+}
+
+.cp__key.is-on {
+  color: #fff;
+  background: var(--tone);
+  box-shadow: 0 8px 16px -8px var(--tone);
+}
+
+.cp__key-n {
+  font-size: 11.5px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.cp__key.is-on .cp__key-n {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* start and finish markers */
+.cp__end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: 100%;
+  padding: 8px 18px 8px 8px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1.5px solid var(--card-border);
+  box-shadow: var(--shadow-1);
+}
+
+.cp__end strong {
+  color: var(--text);
+}
+
+.cp__flag {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--text);
+}
+
+.cp__end--finish.is-lit .cp__flag {
+  background: var(--accent);
+  animation: cp-ping 1.8s ease-out infinite;
+}
+
+@keyframes cp-ping {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 50%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+
+/* the markers sit above the first step and below the last one, joined by a short stem */
+.cp__cap {
+  position: relative;
+}
+
+.cp__cap .cp__end {
+  margin-left: var(--x);
+  transform: translateX(-50%);
+}
+
+.cp__cap--start {
+  padding-bottom: 30px;
+}
+
+.cp__cap--finish {
+  padding-top: 30px;
+}
+
+.cp__cap::after {
+  content: '';
+  position: absolute;
+  left: var(--x);
+  width: 0;
+  height: 30px;
+  border-left: 2.5px dashed color-mix(in oklab, var(--muted) 45%, transparent);
+}
+
+.cp__cap--start::after {
+  bottom: 0;
+}
+
+.cp__cap--finish::after {
+  top: 0;
+}
+
+.cp--rail .cp__cap .cp__end {
+  margin-left: 17px;
+  transform: none;
+}
+
+.cp--rail .cp__cap::after {
+  left: 40px;
+}
+
+/* the steps */
+.cp__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.cp__step {
+  position: relative;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.cp__step:first-child {
+  padding-top: 0;
+}
+
+.cp__step.is-dim {
+  opacity: 0.32;
+  filter: saturate(0.3);
+}
+
+.cp__node {
+  width: var(--w);
+  margin-left: calc(var(--x) - var(--w) / 2);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.cp--rail .cp__node {
+  width: 100%;
+  margin-left: 0;
+}
+
+.cp__node.is-open {
+  border-color: color-mix(in oklab, var(--tone) 35%, var(--card-border));
+  box-shadow: var(--shadow-3);
+}
+
+.cp__node.is-now {
+  border-color: color-mix(in oklab, var(--tone) 45%, var(--card-border));
+}
+
+.cp__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 18px 14px 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+}
+
+.cp__head:hover .cp__headline {
+  color: color-mix(in oklab, var(--tone) 70%, black);
+}
+
+.cp__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cp__when {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklab, var(--tone) 80%, black);
+}
+
+.cp__type {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.cp__headline {
+  font-size: 17.5px;
+  font-weight: 720;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+
+.cp__role {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.cp__now {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 750;
+  color: #fff;
+  background: var(--tone);
+}
+
+.cp__now::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  animation: cp-ping 1.8s ease-out infinite;
+}
+
+.cp__chev {
+  flex: none;
+  color: var(--muted);
+  transition: transform 0.35s cubic-bezier(0.3, 1.2, 0.4, 1);
+}
+
+.is-open .cp__chev {
+  transform: rotate(180deg);
+}
+
+/* dropdown body */
+.cp__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+
+.is-open > .cp__panel {
+  grid-template-rows: 1fr;
+}
+
+.cp__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cp__body {
+  display: grid;
+  gap: 12px;
+  padding: 0 20px 20px 80px;
+}
+
+.cp__step--milestone .cp__body {
+  padding-left: 68px;
+}
+
+.cp__place {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.cp__story {
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+
+.cp__points {
+  display: grid;
+  gap: 6px;
+}
+
+.cp__points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.cp__points li::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+
+.cp__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cp__next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 650;
+  color: #fff;
+  background: var(--text);
+  box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s ease;
+}
+
+.cp__next:hover {
+  transform: translateY(2px);
+}
+
+/* links between steps */
+.cp__link {
+  position: relative;
+  height: 64px;
+  pointer-events: none;
+}
+
+.cp__link svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+.cp__link-base,
+.cp__link-lit {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cp__link-base {
+  stroke: color-mix(in oklab, var(--muted) 55%, transparent);
+  stroke-width: 2.5;
+  stroke-dasharray: 2 7;
+}
+
+.cp__link-lit {
+  stroke: var(--tone);
+  stroke-width: 3.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cp__link.is-lit .cp__link-lit {
+  stroke-dashoffset: 0;
+}
+
+.cp__pad {
+  fill: var(--surface);
+  stroke: color-mix(in oklab, var(--muted) 45%, transparent);
+  stroke-width: 2;
+}
+
+.cp__link.is-lit .cp__pad {
+  stroke: var(--tone);
+}
+
+.cp__star {
+  fill: color-mix(in oklab, var(--muted) 35%, transparent);
+  transition: fill 0.4s ease;
+}
+
+.cp__link.is-lit .cp__star {
+  fill: var(--tone);
+}
+
+/* a little dot walking along the next link: "follow me" */
+.cp__walker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--tone) 25%, transparent);
+  offset-rotate: 0deg;
+  offset-anchor: center;
+  animation: cp-walk 2.2s ease-in-out infinite;
+}
+
+@keyframes cp-walk {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* line styles */
+.cp--line-metro .cp__link-base {
+  stroke-width: 7;
+  stroke-dasharray: none;
+  stroke: color-mix(in oklab, var(--muted) 18%, transparent);
+}
+
+.cp--line-metro .cp__link-lit {
+  stroke-width: 7;
+}
+
+.cp--line-metro .cp__node::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -9px;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid var(--tone);
+}
+
+.cp--line-metro .cp__node {
+  overflow: visible;
+}
+
+.cp--line-circuit .cp__link-base {
+  stroke-dasharray: none;
+  stroke-width: 3;
+  stroke: color-mix(in oklab, var(--muted) 25%, transparent);
+}
+
+.cp--line-dotted .cp__link-base {
+  stroke-width: 4;
+  stroke-dasharray: 0.5 9;
+}
+
+.cp--line-dotted .cp__link-lit {
+  stroke-width: 4;
+}
+
+.cp--line-stars .cp__link-base {
+  stroke-width: 1.6;
+  stroke-dasharray: 3 6;
+}
+
+.cp--line-stars .cp__link-lit {
+  stroke-width: 2;
+}
+
+/* the rail: everything in one column with the line on the left */
+.cp--rail .cp__link {
+  height: 40px;
+}
+
+.cp--rail .cp__step--milestone .cp__head {
+  padding-left: 23px;
+}
+
+.cp--rail .cp__end {
+  margin-left: 0;
+}
+
+@media (max-width: 760px) {
+  .cp__body,
+  .cp__step--milestone .cp__body {
+    padding: 0 16px 18px 16px;
+  }
+
+  .cp__headline {
+    font-size: 16px;
+  }
+
+  .cp__head {
+    gap: 12px;
+  }
+
+  .cp__now {
+    display: none;
+  }
+
+  .cp--line-metro .cp__node::before {
+    left: 41px;
+  }
+}

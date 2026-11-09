@@ -1,0 +1,468 @@
+/*
+  The framed animation. Depth comes from the V1 recipe: a white mat inside a
+  rounded frame, a soft inner shadow on the picture (it sits *in* the frame)
+  and layered outer shadows (the frame sits *on* the page).
+*/
+.story {
+  --frame-radius: 34px;
+  --frame-pad: 12px;
+  --frame-mat: #ffffff;
+  --scene-bg: #eef3fb;
+  --story-accent: var(--accent, #0a84ff);
+  --frame-shadow-color: var(--shadow-color, 230 25% 20%);
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+.story__frame {
+  position: relative;
+  padding: var(--frame-pad);
+  border-radius: var(--frame-radius);
+  background: var(--frame-mat);
+  box-shadow:
+    0 1px 1px hsl(var(--frame-shadow-color) / 0.05),
+    0 2px 2px hsl(var(--frame-shadow-color) / 0.05),
+    0 12px 24px hsl(var(--frame-shadow-color) / 0.08),
+    0 34px 64px hsl(var(--frame-shadow-color) / 0.12),
+    0 70px 120px hsl(var(--frame-shadow-color) / 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.story__viewport {
+  position: relative;
+  aspect-ratio: var(--stage-ratio, 16 / 10);
+  overflow: hidden;
+  border-radius: calc(var(--frame-radius) - var(--frame-pad));
+  background: var(--scene-bg);
+  isolation: isolate;
+  /* keeps the scaled canvas sharp and on its own layer */
+  contain: layout paint;
+}
+
+/* the picture sits inside the frame: a soft inner shadow on top of the art */
+.story__viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(20, 30, 60, 0.07),
+    inset 0 12px 30px rgba(20, 40, 80, 0.16),
+    inset 0 -6px 18px rgba(20, 40, 80, 0.06);
+}
+
+.story__canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+
+.story__camera {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 50% 50%;
+  /* zooms reuse the drawn layer instead of redrawing every SVG each frame */
+  will-change: transform;
+}
+
+.story__fill {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.story__fill canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* scene layers: absolutely placed on the canvas, moved only with transforms.
+   :where() keeps this at zero specificity so a scene's own classes win. */
+:where(.story .layer) {
+  position: absolute;
+  display: block;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+:where(.story .layer) > svg,
+.art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: visible;
+}
+
+/* ---------- captions (film subtitles) ---------- */
+.story__subs {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(10px, 3.4%, 26px);
+  z-index: 7;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.story__caption {
+  max-width: min(92%, 640px);
+  padding: 7px 14px 8px;
+  border-radius: 999px;
+  font-size: clamp(11px, 1.25vw, 15.5px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.005em;
+  text-align: center;
+  color: var(--caption-color, #fff);
+  /* solid, no backdrop blur: blurring a moving scene every frame is expensive */
+  background: var(--caption-bg, rgba(16, 16, 26, 0.74));
+  opacity: 0;
+}
+
+.story__caption:empty {
+  display: none;
+}
+
+.story__caption.is-in {
+  animation: story-caption 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes story-caption {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- progress ---------- */
+.story__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.story__progress-fill {
+  height: 100%;
+  background: var(--story-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* ---------- toolbar under the frame ---------- */
+.story__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 0 6px;
+  font-size: 14px;
+}
+
+.story__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: var(--muted, #6e6e78);
+}
+
+.story__title strong {
+  color: var(--text, #111);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.story__logline {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.story__logline::before {
+  content: '·';
+  margin-right: 10px;
+  opacity: 0.6;
+}
+
+.story__badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--story-accent);
+  box-shadow: 0 4px 10px -3px var(--story-accent);
+}
+
+.story[data-state='playing'] .story__badge {
+  animation: story-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes story-pulse {
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--story-accent) 18%, transparent);
+  }
+}
+
+.story__controls {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.story__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 15px 0 13px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text, #111);
+  background: var(--surface, #fff);
+  box-shadow: var(--shadow-1, 0 2px 8px rgba(0, 0, 0, 0.08)), inset 0 0 0 1px var(--line, rgba(0, 0, 0, 0.06));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.story__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2, 0 6px 16px rgba(0, 0, 0, 0.12)), inset 0 0 0 1px var(--line, rgba(0, 0, 0, 0.06));
+}
+
+.story__btn--icon {
+  width: 38px;
+  padding: 0;
+  justify-content: center;
+}
+
+.story[data-state='ended'] .story__btn:not(.story__btn--icon),
+.story[data-motion='reduced'] .story__btn:not(.story__btn--icon) {
+  color: #fff;
+  background: var(--story-accent);
+  box-shadow: 0 10px 22px -10px var(--story-accent);
+}
+
+/* loops pause with the story and while the stage is off screen */
+.story[data-paused] *,
+.story[data-offscreen] .story__viewport *,
+.story[data-paused] *::before,
+.story[data-paused] *::after {
+  animation-play-state: paused !important;
+}
+
+/* ---------- frame looks ---------- */
+
+/* macOS window chrome around the picture (V4 cards) */
+.story--window {
+  --frame-pad: 10px;
+  --frame-radius: 26px;
+}
+
+.story--window .story__frame {
+  padding-top: 0;
+}
+
+.story__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 6px;
+}
+
+.story__lights {
+  display: flex;
+  gap: 8px;
+}
+
+.story__lights i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+}
+.story__lights i:nth-child(2) {
+  background: #febc2e;
+}
+.story__lights i:nth-child(3) {
+  background: #28c840;
+}
+
+.story__wtitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted, #6e6e78);
+  white-space: nowrap;
+}
+
+/* dark device bezel */
+.story--bezel {
+  --frame-mat: linear-gradient(160deg, #2b2b33, #141418 60%);
+  --frame-pad: 14px;
+  --frame-radius: 30px;
+}
+
+.story--bezel .story__frame {
+  box-shadow:
+    0 1px 1px hsl(var(--frame-shadow-color) / 0.08),
+    0 14px 28px hsl(var(--frame-shadow-color) / 0.16),
+    0 40px 80px hsl(var(--frame-shadow-color) / 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* thick paper mat, deeper at the bottom like a print */
+.story--paper {
+  --frame-mat: #fffdf7;
+  --frame-pad: 16px;
+  --frame-radius: 14px;
+}
+
+.story--paper .story__frame {
+  padding-bottom: 34px;
+}
+
+/* stepped pixel border */
+.story--pixel {
+  --frame-radius: 0px;
+  --frame-pad: 10px;
+}
+
+.story--pixel .story__frame {
+  border-radius: 0;
+  box-shadow:
+    0 -6px 0 0 #fff,
+    0 6px 0 0 #fff,
+    -6px 0 0 0 #fff,
+    6px 0 0 0 #fff,
+    0 -12px 0 0 #1b1b2f,
+    0 12px 0 0 #1b1b2f,
+    -12px 0 0 0 #1b1b2f,
+    12px 0 0 0 #1b1b2f,
+    -6px -6px 0 0 #1b1b2f,
+    6px -6px 0 0 #1b1b2f,
+    -6px 6px 0 0 #1b1b2f,
+    6px 6px 0 0 #1b1b2f,
+    0 30px 50px -10px rgba(40, 20, 80, 0.3);
+}
+
+.story--pixel .story__viewport {
+  border-radius: 0;
+}
+
+/* frosted glass rim */
+.story--glass {
+  --frame-mat: linear-gradient(150deg, rgba(255, 255, 255, 0.95), rgba(240, 244, 255, 0.75));
+  --frame-pad: 14px;
+}
+
+.story--glass .story__frame {
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 640px) {
+  .story {
+    --frame-pad: 7px;
+    --frame-radius: 22px;
+  }
+
+  .story--paper .story__frame {
+    padding-bottom: 20px;
+  }
+
+  .story__toolbar {
+    margin-top: 12px;
+    padding: 0 2px;
+  }
+
+  .story__logline {
+    display: none;
+  }
+
+  .story__btn {
+    height: 36px;
+  }
+
+  .story__caption {
+    padding: 4px 10px 5px;
+  }
+
+  .story__wtitle {
+    display: none;
+  }
+}
+
+/* confetti made by kit.tsx */
+.confetti__bit {
+  position: absolute;
+  display: block;
+  border-radius: 2px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* no frame at all: the scene sits directly on the page background */
+.story--bare {
+  --frame-pad: 0px;
+  --frame-radius: 0px;
+  --caption-bg: rgba(255, 255, 255, 0.94);
+  --caption-color: #1c1b29;
+}
+
+.story--bare .story__frame {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.story--bare .story__viewport {
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  contain: none;
+  /* nothing in the drawing is clickable; with no frame it spreads over the
+     buttons and links around it while the camera zooms, so clicks pass through */
+  pointer-events: none;
+}
+
+.story--bare .story__toolbar {
+  position: relative;
+  z-index: 2;
+}
+
+.story--bare .story__viewport::after,
+.story--bare .story__progress {
+  display: none;
+}
+
+.story--bare .story__caption {
+  box-shadow: 0 6px 18px -8px rgba(30, 20, 70, 0.35), inset 0 0 0 1px rgba(30, 20, 70, 0.06);
+}

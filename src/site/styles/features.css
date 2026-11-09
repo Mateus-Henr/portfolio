@@ -1,0 +1,409 @@
+/*
+  Options added with version 21: the logo, the bottom navigation on phones,
+  isometric section icons, centred headings, "See more", the scenes on the
+  project cards, the light terminal and the career path followed by the scroll.
+*/
+
+/* ---------- logo ---------- */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  display: block;
+  flex: none;
+  border-radius: 32%;
+  object-fit: cover;
+  background: #7c5cff;
+  box-shadow: 0 0 0 2px #fff, 0 6px 14px -6px rgba(40, 30, 90, 0.45);
+}
+
+.logo__name {
+  font-family: 'Orbitron Variable', var(--font-body);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--text);
+}
+
+.navx--pill .brand--logo {
+  padding-right: 6px;
+}
+
+/* ---------- phones: the floating pill moves to the bottom ---------- */
+@media (max-width: 820px) {
+  .navx--pill.navx--mbottom {
+    top: auto;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    gap: 4px;
+    padding: 6px;
+    box-shadow: var(--shadow-3);
+  }
+
+  .navx--mbottom .logo__name {
+    display: none;
+  }
+
+  .navx--mbottom .brand--logo {
+    padding: 0 4px 0 0;
+  }
+
+  .navx--mbottom .navx__link {
+    padding: 10px 12px;
+  }
+
+  .navx--mbottom .navx__glyph {
+    width: 19px;
+    height: 19px;
+  }
+
+  .navx--mbottom .navx__link.is-active {
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 12%, white);
+  }
+
+  html[data-nav-mobile='bottom'] .hero2 {
+    --nav-space: 64px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navx--mbottom .navx__link {
+    padding: 10px 10px;
+  }
+}
+
+/* ---------- isometric section icons ---------- */
+.iso-icon {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+/* ---------- centred headings and menus ---------- */
+.shead--center {
+  gap: 10px;
+}
+
+.shead--center .shead__action {
+  align-self: center;
+  margin-top: 8px;
+}
+
+.site--centered .pjs__menu,
+.site--centered .certs2__menu,
+.site--centered .cp__legend {
+  justify-content: center;
+}
+
+.site--centered .pills {
+  max-width: 100%;
+}
+
+.site--centered .foot2__inner {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* ---------- "See more" ---------- */
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.more__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px 12px 22px;
+  border: 1.5px solid var(--card-border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14.5px;
+  font-weight: 650;
+  box-shadow: var(--shadow-2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.more__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
+  color: var(--accent);
+}
+
+.more__chev {
+  transition: transform 0.3s ease;
+}
+
+.more__chev.is-up {
+  transform: rotate(180deg);
+}
+
+/* ---------- cards fade in when a list changes ---------- */
+.pj--in {
+  animation: pj-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+@keyframes pj-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+/* ---------- certificates: the language's own icon ---------- */
+.cert2__tech {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--brand, #8a8a99) 11%, white);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--brand, #8a8a99) 22%, transparent),
+    0 8px 16px -12px var(--brand, #8a8a99);
+}
+
+/* ---------- phone link ---------- */
+.social--phone .social__icon {
+  background: #22c3a6;
+}
+
+/* ---------- the terminal, light ---------- */
+.site .term.term--light {
+  color: var(--text);
+  background: #fff;
+  border-color: var(--card-border);
+}
+
+.term--light .wbar {
+  background: linear-gradient(#fcfcfe, #f5f5f9);
+  border-bottom-color: var(--line);
+  color: var(--muted);
+}
+
+.term--light .term__body {
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--accent) 12%, transparent) 1px, transparent 1.4px);
+  background-size: 18px 18px;
+}
+
+.term--light .term__prompt {
+  color: var(--accent);
+}
+
+.term--light .term__out {
+  color: var(--text);
+}
+
+.term--light .term__out + p + .term__out {
+  color: var(--muted);
+}
+
+.term--light .ghost-btn {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-1), inset 0 0 0 1px var(--line);
+}
+
+.term--light .term__socials .social {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--card-border);
+  box-shadow: var(--shadow-1);
+}
+
+.term--light .term__cursor {
+  background: var(--accent);
+}
+
+/* ---------- project scenes ---------- */
+.pj__scene {
+  position: relative;
+  aspect-ratio: 360 / 136;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--tone) 20%, transparent) 1px, transparent 1.4px) 0 0 / 16px 16px,
+    linear-gradient(180deg, color-mix(in oklab, var(--tone) 7%, white), color-mix(in oklab, var(--tone) 2%, white));
+}
+
+.pj > .pj__scene:first-child {
+  border-radius: calc(var(--radius) - 1.5px) calc(var(--radius) - 1.5px) 0 0;
+}
+
+.pj__scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pjsc-t {
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.pjsc-t:not([fill]) {
+  fill: #2b2d42;
+}
+
+.pjsc-t--s {
+  font-size: 7.5px;
+}
+
+.pjsc-t--big {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.pjsc-t--muted:not([fill]) {
+  fill: #6b6880;
+  font-weight: 600;
+}
+
+.pjsc-term {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: #e8e6f0;
+}
+
+/* on touch screens a tap plays the scene: show a small play button */
+@media (hover: none) {
+  .pj__scene {
+    cursor: pointer;
+  }
+
+  .pj__scene::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.94)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.5 1.8v8.4l7-4.2z' fill='%236d4aff'/%3E%3C/svg%3E")
+      center / 12px no-repeat;
+    box-shadow: var(--shadow-1), inset 0 0 0 1px var(--line);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .pj__scene[data-playing]::after {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* ---------- career path followed by the scroll ---------- */
+.cp--follow .cp__link .cp__link-lit,
+.cp--follow .cp__link.is-lit .cp__link-lit {
+  stroke-dashoffset: calc(1 - var(--p, 0));
+  transition: none;
+}
+
+.cp--follow .cp__walker {
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  opacity: 0;
+  animation: none;
+  offset-distance: calc(var(--p, 0) * 100%);
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--tone) 22%, transparent),
+    0 0 18px 4px color-mix(in oklab, var(--tone) 55%, transparent);
+  transition: opacity 0.25s ease;
+}
+
+.cp--follow .cp__link[data-ball] .cp__walker {
+  opacity: 1;
+}
+
+.cp--follow .cp__node[data-reveal] {
+  transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.cp--follow .cp__node[data-current] {
+  border-color: color-mix(in oklab, var(--tone) 55%, var(--card-border));
+  box-shadow: var(--shadow-3), 0 0 0 4px color-mix(in oklab, var(--tone) 16%, transparent);
+}
+
+.cp__end--finish[data-lit] .cp__flag {
+  background: var(--accent);
+  animation: cp-ping 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pj--in {
+    animation: none;
+  }
+
+  .pj__scene::after {
+    display: none;
+  }
+
+  .cp__end--finish[data-lit] .cp__flag {
+    animation: none;
+  }
+}
+
+/* ---------- about: about-me.md and quick-facts side by side, skills.md below ---------- */
+.about2__files {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.about2__files > .card {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.about2__files .about2__story p {
+  font-size: clamp(17px, 1.4vw, 19px);
+  line-height: 1.65;
+}
+
+.about2__files .about2__skills {
+  grid-column: 1 / -1;
+}
+
+.about2__files .skills2 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px 28px;
+}
+
+@media (max-width: 1000px) {
+  .about2__files {
+    grid-template-columns: 1fr;
+  }
+
+  .about2__files .skills2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .about2__files .skills2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .shead--center {
+    align-items: center;
+  }
+
+  .shead--center .shead__action {
+    align-self: center;
+    width: auto;
+  }
+}
